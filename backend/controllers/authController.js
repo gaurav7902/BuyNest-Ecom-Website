@@ -3,7 +3,7 @@ import sendEmail from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const generateToken = (id) => {
+const generateToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
@@ -36,11 +36,11 @@ const registerUser = async (req, res) => {
             const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
             newUser.otp = otp; // Store the OTP in the user document
 
+            // mail
             const message = `
         Welcome to BuyNest Your account has been successfully created.
         Thank you for registering with us. We are excited to have you on board!
         Your OTP for email verification is: ${otp}`;
-
             await sendEmail(
                 email,
                 "Welcome to BuyNest, your OTP for registration",
@@ -103,7 +103,6 @@ const loginUser = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: "Server error" });
     }
-    console.log("Login user function called");
 };
 
 // logout
@@ -113,7 +112,7 @@ const logoutUser = (req, res) => {
 
 const getUsers = async (req, res) => {
     try {
-        const users = await User.findById(req.user.id).select("-password");
+        const users = await User.find({}).select("-password");
         res.json(users);
     } catch (error) {
         console.error(error);

@@ -1,14 +1,14 @@
 import express from "express";
-const routes = express.Router();
 import { protect } from "../middleware/authMiddleware.js";
 import { admin } from "../middleware/adminMiddleware.js";
-
 import {
     registerUser,
     loginUser,
     logoutUser,
     getUsers,
 } from "../controllers/authController.js";
+
+const routes = express.Router();
 
 routes.post("/register", registerUser);
 routes.post("/login", loginUser);
