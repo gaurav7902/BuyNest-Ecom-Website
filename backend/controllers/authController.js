@@ -7,6 +7,37 @@ const generateToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
+const verifyEmail = async (req, res) => {
+    const { email, otp } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (user.isVerified) {
+            return res
+                .status(400)
+                .json({ message: "Email is already verified" });
+        }
+
+        if (user.otp !== otp) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        user.isVerified = true;
+        user.otp = null; // Clear the OTP after successful verification
+        await user.save();
+
+        res.status(200).json({ message: "Email verified successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
 const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -120,4 +151,4 @@ const getUsers = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, logoutUser, getUsers };
+export { registerUser, verifyEmail, loginUser, logoutUser, getUsers };

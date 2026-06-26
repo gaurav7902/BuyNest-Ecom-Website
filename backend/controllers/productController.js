@@ -31,8 +31,8 @@ const createProduct = async (req, res) => {
             // Delete local file after upload
             try {
                 await fs.promises.unlink(image);
-            } catch (err) {
-                console.error("Failed to delete local file:", err);
+            } catch (error) {
+                console.error("Failed to delete local file:", error);
             }
         }
 
@@ -45,8 +45,6 @@ const createProduct = async (req, res) => {
             imageUrl,
             cloudinaryId,
         });
-
-        console.log("Product to be created:", product); // Log the product object before saving
 
         const createdProduct = await product.save();
         res.status(201).json(createdProduct);
@@ -67,19 +65,19 @@ const updateProduct = async (req, res) => {
         }
 
         if (image) {
-            // 1. Upload new image
+            // upload new image
             const result = await cloudinary.uploader.upload(image);
             const newImageUrl = result.secure_url;
             const newCloudinaryId = result.public_id;
 
-            // 2. Delete local file
+            // delete local file
             try {
                 await fs.promises.unlink(image);
-            } catch (err) {
-                console.error("Failed to delete local file:", err);
+            } catch (error) {
+                console.error("Failed to delete local file:", error);
             }
 
-            // 3. Delete old image from Cloudinary if it exists
+            // delete old image from Cloudinary if it exists
             if (product.cloudinaryId) {
                 await cloudinary.uploader.destroy(product.cloudinaryId);
             }
