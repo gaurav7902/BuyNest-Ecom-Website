@@ -85,7 +85,7 @@ const createOrder = async (req, res) => {
         <p>Your order has been successfully placed.</p>
         <p><strong>Order ID:</strong> ${order._id}</p>
         <p><strong>Total Amount:</strong> $${order.totalAmount}</p>
-        <h3>Shipping Address</h3>
+        <h3>Shipping Address:</h3>
         <p>
         ${order.address.fullName}<br>
         ${order.address.street}<br>

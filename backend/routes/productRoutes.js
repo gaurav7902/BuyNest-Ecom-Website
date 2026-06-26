@@ -1,4 +1,5 @@
 import express from "express";
+import fs from "fs";
 import { protect } from "../middleware/authMiddleware.js";
 import { admin } from "../middleware/adminMiddleware.js";
 import {
@@ -19,7 +20,7 @@ routes.use(
     (req, res, next) => {
         if (req.file) {
             // Delete the uploaded file
-            require("fs").unlinkSync(req.file.path);
+            fs.unlinkSync(req.file.path);
         }
         next();
     })

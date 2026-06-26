@@ -28,6 +28,10 @@ const orderSchema = new mongoose.Schema(
             enum: ["pending", "shipped", "cancelled", "delivered"],
             default: "pending",
         },
+        isPaid: {
+            type: Boolean,
+            default: false,
+        },
         address: {
             fullName: { type: String, required: true },
             street: { type: String, required: true },
