@@ -1,39 +1,85 @@
 import Order from "../models/Order.js";
 import sendEmail from "../utils/sendEmail.js";
 import Product from "../models/Product.js";
+import mongoose from "mongoose";
 
 const createOrder = async (req, res) => {
+    const session = await mongoose.startSession();
     try {
-        const { items, totalAmount, address, paymentId } = req.body;
+        const { items, address, paymentId } = req.body;
 
-        if (
-            !items ||
-            items.length === 0 ||
-            !totalAmount ||
-            !address ||
-            !paymentId
-        ) {
-            return res.status(400).json({ message: "Missing required fields" });
+        if (!items || items.length === 0 || !address || !paymentId) {
+            return res.status(400).json({
+                message:
+                    "Missing required fields: items, address, or paymentId",
+            });
         }
 
-        // Create a new order object
-        const newOrder = new Order({
-            user: req.user._id,
-            items: items.map(item => ({
-                product: item._id,
-                name: item.name,
-                image: item.image,
-                quantity: item.quantity,
-                price: item.price,
-            })),
-            totalAmount,
-            address: address,
-            paymentId,
+        let calculatedTotal = 0;
+        const orderItemsSnapshot = [];
+
+        // transaction for atomicity
+        await session.withTransaction(async () => {
+            for (const item of items) {
+                const product = await Product.findById(item._id).session(
+                    session
+                );
+
+                if (!product) {
+                    throw {
+                        status: 404,
+                        message: `Product not found: ${item._id}`,
+                    };
+                }
+
+                if (!product.isActive) {
+                    throw {
+                        status: 400,
+                        message: `Product no longer available: ${product.name}`,
+                    };
+                }
+
+                if (product.stock < item.quantity) {
+                    throw {
+                        status: 400,
+                        message: `Insufficient stock for ${product.name}. Only ${product.stock} available.`,
+                    };
+                }
+
+                const itemTotal = product.price * item.quantity;
+                calculatedTotal += itemTotal;
+
+                orderItemsSnapshot.push({
+                    product: product._id,
+                    name: product.name,
+                    image: product.imageUrl,
+                    quantity: item.quantity,
+                    price: product.price,
+                });
+
+                // Deduct stock
+                await Product.findByIdAndUpdate(
+                    product._id,
+                    { $inc: { stock: -item.quantity } },
+                    { session }
+                );
+            }
+
+            const newOrder = new Order({
+                user: req.user._id,
+                items: orderItemsSnapshot,
+                totalAmount: calculatedTotal,
+                address,
+                paymentId,
+            });
+
+            await newOrder.save({ session });
+
+            session.result = newOrder;
         });
 
-        const order = await newOrder.save();
+        const order = session.result;
 
-        // Send email notification to the user
         const emailSubject = "Order Confirmation";
         const emailBody = `<h1>Thank you for your order!</h1>
         <p>Your order has been successfully placed.</p>
@@ -53,8 +99,16 @@ const createOrder = async (req, res) => {
 
         res.status(201).json(order);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        if (error.status) {
+            return res.status(error.status).json({ message: error.message });
+        }
+        console.error("Order Creation Error:", error);
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    } finally {
+        await session.endSession();
     }
 };
 
@@ -67,7 +121,10 @@ const getOrderByUserId = async (req, res) => {
         res.json(orders);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
     }
 };
 
@@ -79,7 +136,10 @@ const getAllOrders = async (req, res) => {
         res.json(orders);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
     }
 };
 
@@ -106,7 +166,10 @@ const updateOrderStatus = async (req, res) => {
         res.json(order);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
     }
 };
 

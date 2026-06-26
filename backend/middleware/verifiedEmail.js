@@ -19,7 +19,10 @@ const verifiedEmail = async (req, res, next) => {
         next();
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({
+            message: "Server error",
+            error: error.message,
+        });
     }
 };
 

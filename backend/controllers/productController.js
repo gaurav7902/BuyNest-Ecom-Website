@@ -11,7 +11,10 @@ const getProductById = async (req, res) => {
         res.json(product);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message,
+        });
     }
 };
 
@@ -42,6 +45,7 @@ const createProduct = async (req, res) => {
             price,
             category,
             stock,
+            isActive: stock > 0,
             imageUrl,
             cloudinaryId,
         });
@@ -50,7 +54,10 @@ const createProduct = async (req, res) => {
         res.status(201).json(createdProduct);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message,
+        });
     }
 };
 
@@ -90,13 +97,17 @@ const updateProduct = async (req, res) => {
         product.description = description || product.description;
         product.price = price || product.price;
         product.category = category || product.category;
-        product.stock = stock || product.stock;
+        product.stock = stock !== undefined ? stock : product.stock;
+        product.isActive = product.stock > 0;
 
         const updatedProduct = await product.save();
         res.json(updatedProduct);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message,
+        });
     }
 };
 
@@ -116,7 +127,10 @@ const deleteProduct = async (req, res) => {
         res.json({ message: "Product removed" });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message,
+        });
     }
 };
 
@@ -126,7 +140,10 @@ const getProducts = async (req, res) => {
         res.json(products);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message,
+        });
     }
 };
 

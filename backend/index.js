@@ -40,7 +40,10 @@ app.use((req, res) => {
 // global error handler
 app.use((err, req, res, next) => {
     console.error(err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({
+        message: "Internal Server Error",
+        error: err.message,
+    });
 });
 
 app.listen(PORT);
