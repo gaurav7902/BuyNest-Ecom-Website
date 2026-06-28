@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
@@ -7,7 +7,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // if user is logged in on component mount
-    const storedUser = localStorage.getItem("userInfo");
+    const storedUser = localStorage.getItem('userInfo');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -15,12 +15,12 @@ const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("userInfo", JSON.stringify(userData));
+    localStorage.setItem('userInfo', JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("userInfo");
+    localStorage.removeItem('userInfo');
   };
 
   return (

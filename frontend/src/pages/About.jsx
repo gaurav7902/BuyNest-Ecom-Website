@@ -34,7 +34,7 @@ const About = () => {
           height: "180px",
           borderRadius: "50%",
           objectFit: "cover",
-          border: "4px solid #f97316",
+          border: "4px solid #10b981",
           marginBottom: "20px",
           boxShadow: "0 4px 20px rgba(249, 115, 22, 0.4)",
         }}
@@ -51,7 +51,7 @@ const About = () => {
       <h3
         style={{
           fontSize: "1.5rem",
-          color: "#f97316",
+          color: "#10b981",
           marginBottom: "15px",
         }}
       >

@@ -31,7 +31,7 @@ const ReturnPolicy = () => {
         may securely initiate a return within 30 days of receiving your order.
       </p>
 
-      <h4 style={{ color: "#f97316", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
         1. Eligibility for Returns
       </h4>
       <p style={{ marginBottom: "15px" }}>
@@ -41,7 +41,7 @@ const ReturnPolicy = () => {
         mappings are strictly required.
       </p>
 
-      <h4 style={{ color: "#f97316", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
         2. Refund Processing
       </h4>
       <p style={{ marginBottom: "15px" }}>
@@ -51,7 +51,7 @@ const ReturnPolicy = () => {
         Razorpay gateway endpoint within 5-7 business working days naturally.
       </p>
 
-      <h4 style={{ color: "#f97316", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
         3. Exempted Output Goods
       </h4>
       <p style={{ marginBottom: "15px" }}>
@@ -60,7 +60,7 @@ const ReturnPolicy = () => {
         do not qualify for any standard refund sequence.
       </p>
 
-      <h4 style={{ color: "#f97316", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
         4. Shipping Transit Costs
       </h4>
       <p>

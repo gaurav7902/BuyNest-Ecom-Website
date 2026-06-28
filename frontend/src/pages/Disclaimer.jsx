@@ -33,7 +33,7 @@ const Disclaimer = () => {
         usage.
       </p>
 
-      <h4 style={{ color: "#f97316", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
         1. Accuracy of Materials
       </h4>
       <p style={{ marginBottom: "15px" }}>
@@ -44,7 +44,7 @@ const Disclaimer = () => {
         Unsplash imagery protocols.
       </p>
 
-      <h4 style={{ color: "#f97316", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
         2. Payment Processing Restrictions
       </h4>
       <p style={{ marginBottom: "15px" }}>
@@ -54,7 +54,7 @@ const Disclaimer = () => {
         exact deductibles exist.
       </p>
 
-      <h4 style={{ color: "#f97316", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
         3. External Binding Links
       </h4>
       <p style={{ marginBottom: "15px" }}>

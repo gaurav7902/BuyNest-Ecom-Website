@@ -31,7 +31,7 @@
 
 .navbar-brand a::after {
   content: ".";
-  color: #f97316;
+  color: #10b981;
   font-size: 36px;
 }
 
@@ -60,7 +60,7 @@
   height: 2px;
   bottom: -6px;
   left: 0;
-  background: #f97316;
+  background: #10b981;
   transition: width 0.3s ease;
   border-radius: 2px;
 }

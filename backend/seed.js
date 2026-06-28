@@ -42,6 +42,8 @@ const seedProducts = [
         stock: 50,
         rating: 4.8,
         numReviews: 120,
+        imageUrl:
+            "https://tetro.in/cdn/shop/files/15PMBlue-S1.jpg?v=1744871696&width=1080",
     },
     {
         name: "Samsung Galaxy S24 Ultra",
@@ -52,6 +54,8 @@ const seedProducts = [
         stock: 40,
         rating: 4.7,
         numReviews: 95,
+        imageUrl:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGNcAnUfcd9DyiPPtv-OB1v6WWzCA0ZNSI7g&s",
     },
     {
         name: "Sony WH-1000XM5",
@@ -62,6 +66,8 @@ const seedProducts = [
         stock: 100,
         rating: 4.9,
         numReviews: 200,
+        imageUrl:
+            "https://www.designinfo.in/wp-content/uploads/2023/08/Sony-WH-1000XM5-Black-15-e1691557639418.webp",
     },
     {
         name: "Nike Air Jordan 1",
@@ -72,6 +78,8 @@ const seedProducts = [
         stock: 30,
         rating: 4.6,
         numReviews: 80,
+        imageUrl:
+            "https://cdn.sanity.io/images/d6wcctii/production/f9c8343def07aae960bf1eadb01732fbbde9ea00-1070x760.jpg",
     },
     {
         name: "Adidas Ultraboost 22",
@@ -82,46 +90,56 @@ const seedProducts = [
         stock: 60,
         rating: 4.5,
         numReviews: 110,
+        imageUrl:
+            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     },
     {
-        name: "Levi's 501 Original Fit Jeans",
+        name: "Wireless Noise-Cancelling Headphones",
         description:
-            "Timeless straight-leg denim jeans, a staple in every wardrobe.",
-        price: 60,
-        category: "Clothing",
-        stock: 150,
-        rating: 4.4,
-        numReviews: 300,
-    },
-    {
-        name: "Ninja AF101 Air Fryer",
-        description:
-            "Compact and efficient air fryer for healthy, crispy meals with minimal oil.",
-        price: 120,
-        category: "Home & Kitchen",
-        stock: 70,
-        rating: 4.7,
-        numReviews: 150,
-    },
-    {
-        name: "Keurig K-Elite Coffee Maker",
-        description:
-            "Versatile coffee brewer with multiple brew sizes and a large water reservoir.",
-        price: 189,
-        category: "Home & Kitchen",
-        stock: 40,
-        rating: 4.3,
-        numReviews: 250,
-    },
-    {
-        name: "Dyson V15 Detect Vacuum",
-        description:
-            "Powerful cordless vacuum with laser detection for invisible dust and deep cleaning.",
-        price: 749,
-        category: "Home & Kitchen",
-        stock: 20,
+            "Immersive sound experience with advanced active noise cancellation.",
+        price: 299.99,
+        category: "Electronics",
+        stock: 15,
+        imageUrl:
+            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
         rating: 4.8,
-        numReviews: 90,
+        numReviews: 24,
+    },
+    {
+        name: "Minimalist Modern Chair",
+        description:
+            "A stylish and comfortable addition to any contemporary living room.",
+        price: 150.0,
+        category: "Furniture",
+        stock: 30,
+        imageUrl:
+            "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+        rating: 4.2,
+        numReviews: 12,
+    },
+    {
+        name: "Professional DSLR Camera",
+        description:
+            "Capture stunning moments with high-resolution clarity and speed.",
+        price: 1199.99,
+        category: "Electronics",
+        stock: 8,
+        imageUrl:
+            "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+        rating: 4.9,
+        numReviews: 50,
+    },
+    {
+        name: "Classic White Sneakers",
+        description:
+            "Versatile and comfortable, a staple for any casual outfit.",
+        price: 85.0,
+        category: "Clothing",
+        stock: 50,
+        imageUrl:
+            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+        rating: 4.5,
+        numReviews: 89,
     },
 ];
 
@@ -138,7 +156,7 @@ const seedData = async () => {
 
         // Hash passwords and seed users
         const usersWithHashedPasswords = await Promise.all(
-            seedUsers.map(async user => {
+            seedUsers.map(async (user) => {
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(user.password, salt);
                 return { ...user, password: hashedPassword };
@@ -162,18 +180,14 @@ const seedData = async () => {
                     {
                         product: products[0]._id,
                         name: products[0].name,
-                        image:
-                            products[0].imageUrl ||
-                            "https://via.placeholder.com/150",
+                        image: products[0].imageUrl,
                         quantity: 1,
                         price: products[0].price,
                     },
                     {
                         product: products[2]._id,
                         name: products[2].name,
-                        image:
-                            products[2].imageUrl ||
-                            "https://via.placeholder.com/150",
+                        image: products[2].imageUrl,
                         quantity: 1,
                         price: products[2].price,
                     },
@@ -197,9 +211,7 @@ const seedData = async () => {
                     {
                         product: products[3]._id,
                         name: products[3].name,
-                        image:
-                            products[3].imageUrl ||
-                            "https://via.placeholder.com/150",
+                        image: products[3].imageUrl,
                         quantity: 2,
                         price: products[3].price,
                     },

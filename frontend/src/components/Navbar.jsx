@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
-import { useSelector } from "react-redux";
-import "../styles/Navbar.css";
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
+import '../styles/Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -11,7 +11,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate('/login');
   };
 
   return (
@@ -22,11 +22,11 @@ const Navbar = () => {
             src='/brand-logo.png'
             alt='BuyNest'
             style={{
-              height: "36px",
-              width: "36px",
-              borderRadius: "8px",
-              objectFit: "cover",
-              filter: "drop-shadow(0 2px 8px rgba(249, 115, 22, 0.35))",
+              height: '36px',
+              width: '36px',
+              borderRadius: '8px',
+              objectFit: 'cover',
+              filter: 'drop-shadow(0 2px 8px rgba(249, 115, 22, 0.35))',
             }}
           />
           BuyNest
@@ -44,7 +44,7 @@ const Navbar = () => {
             <li>
               <Link to='/profile'>Hi, {user.name}</Link>
             </li>
-            {user.role === "admin" && (
+            {user.role === 'admin' && (
               <li>
                 <Link to='/admin'>Admin</Link>
               </li>

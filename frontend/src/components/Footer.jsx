@@ -23,7 +23,7 @@ const Footer = () => {
         }}
       >
         <div>
-          <h3 style={{ color: "#f97316", marginBottom: "10px" }}>BuyNest</h3>
+          <h3 style={{ color: "#10b981", marginBottom: "10px" }}>BuyNest</h3>
           <p style={{ color: "#a1a1aa", fontSize: "0.9rem" }}>
             Premium E-Commerce Platform.
           </p>

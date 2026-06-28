@@ -18,7 +18,11 @@ const PORT = process.env.PORT || 5000;
 //middlewares
 app.use(
     cors({
-        origin: ["http://localhost:5173", "https://127.0.0.1:5173"],
+        origin: [
+            "http://localhost:5173",
+            "https://127.0.0.1:5173",
+            process.env.FRONTEND_URL,
+        ],
         credentials: true,
     })
 );
@@ -35,7 +39,17 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/analytics", analyticsRoutes);
-// // app.use("/api/cart", cartRoutes);
+
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../frontend/build")));
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+    });
+} else {
+    app.get("/", (req, res) => {
+        res.send("BuyNest API is running in development mode...");
+    });
+}
 
 // 404
 app.use((req, res) => {
