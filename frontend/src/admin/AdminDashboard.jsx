@@ -46,7 +46,7 @@ const AdminDashboard = () => {
     <div className={styles.pageWrapper}>
       <div className={styles.header}>
         <img
-          src='/ShopNestLogo.png'
+          src='/brand-logo.png'
           alt='Logo'
           className={styles.logo}
         />

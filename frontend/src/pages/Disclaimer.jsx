@@ -10,7 +10,7 @@ const Disclaimer = () => {
 
       <p className={styles.paragraph}>
         The data, interfaces, and graphical components represented across the
-        ShopNest domain strictly act uniquely as an educational development
+        BuyNest domain strictly act uniquely as an educational development
         platform. This codebase models rigorous application structures and
         architectures for purely demonstrative, portfolio-oriented engineering
         usage.
@@ -20,7 +20,7 @@ const Disclaimer = () => {
         1. Accuracy of Materials
       </h4>
       <p className={styles.sectionText}>
-        The materials spanning the ShopNest interface may heavily include
+        The materials spanning the BuyNest interface may heavily include
         dynamic technical, typographical, or dummy photographic elements.
         Product matrices mapped in the DB pipeline do absolutely not correlate
         to strictly real physical outputs and are safely populated via generic
@@ -41,7 +41,7 @@ const Disclaimer = () => {
         3. External Binding Links
       </h4>
       <p className={styles.sectionText}>
-        ShopNest operates completely independent domains and takes strictly zero
+        BuyNest operates completely independent domains and takes strictly zero
         absolute parameter responsibility over the specific contents or
         behaviors populated via external routing anchors generated implicitly by
         third-party configurations.
