@@ -5,7 +5,7 @@
   "main": "eslint.config.js",
   "scripts": {
     "build": "cd frontend && npm install && npm run build",
-    "start": "NODE_ENV=production cd backend && npm start",
+    "start": "cd backend && npm start",
     "dev:server": "cd backend && npm run dev",
     "dev:client": "cd frontend && npm run dev",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
