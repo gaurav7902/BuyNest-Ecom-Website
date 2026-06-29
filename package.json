@@ -4,7 +4,7 @@
   "description": "",
   "main": "eslint.config.js",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
+    "build": "cd frontend && npm install --include=dev && npm run build",
     "start": "cd backend && npm start",
     "dev:server": "cd backend && npm run dev",
     "dev:client": "cd frontend && npm run dev",
