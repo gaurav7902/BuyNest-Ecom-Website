@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import VerifyOTP from './pages/VerifyOTP';
 import ProductDetail from './pages/ProductDetails';
+import Shop from './pages/Shop';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Success from './pages/Success';
@@ -59,6 +60,7 @@ function App() {
               }
             />
             <Route path='/about' element={<About />} />
+            <Route path='/shop' element={<Shop />} />
             <Route path='/return' element={<ReturnPolicy />} />
             <Route path='/disclaimer' element={<Disclaimer />} />
             <Route path='/product/:id' element={<ProductDetail />} />

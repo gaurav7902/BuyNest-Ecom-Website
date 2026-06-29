@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import ProductCard from "../components/ProductCard";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -28,9 +29,9 @@ const Home = () => {
         <h1>Welcome to BuyNest !!</h1>
         <p>Find the best products at unbeatable prices.</p>
       </div>
-      <h2>Featured Products</h2>
+      <h2 style={{ textAlign: 'center' }}>Featured Products</h2>
       {loading ? (
-        <div>Loading...</div>
+        <div style={{ textAlign: 'center' }}>Loading...</div>
       ) : (
         <div className='product-grid'>
           {products.map((product) => (
@@ -38,6 +39,9 @@ const Home = () => {
           ))}
         </div>
       )}
+      <div style={{ textAlign: 'center', marginTop: '40px' }}>
+        <Link to='/shop' className='btn'>Shop All Products</Link>
+      </div>
     </div>
   );
 };
