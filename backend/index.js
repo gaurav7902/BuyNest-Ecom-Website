@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === "production") {
     const distPath = path.resolve(process.cwd(), "..", "frontend", "dist");
     app.use(express.static(distPath));
 
-    app.get("(.*)", (req, res) => {
+    app.get(/.*/, (req, res) => {
         res.sendFile(path.join(distPath, "index.html"));
     });
 }
