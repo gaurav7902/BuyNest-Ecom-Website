@@ -1,0 +1,109 @@
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #18181b;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  color: #fafafa;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+}
+.name {
+  color: #fff;
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+.detail {
+  color: #a1a1aa;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+.detailEmail {
+  margin-bottom: 15px;
+}
+.badge {
+  background: rgba(249,115,22,0.1);
+  color: #10b981;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  display: inline-block;
+}
+.logoutBtn {
+  background: #ef4444;
+  box-shadow: none;
+}
+.orderHistoryTitle {
+  color: #10b981;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+.loadingText {
+  color: #a1a1aa;
+}
+.noOrdersContainer {
+  background: #09090b;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #27272a;
+}
+.noOrdersText {
+  color: #a1a1aa;
+  margin-bottom: 15px;
+}
+.ordersGrid {
+  display: grid;
+  gap: 20px;
+}
+.orderItem {
+  background: #09090b;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #27272a;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.orderInfoText {
+  color: #a1a1aa;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+.orderWhite {
+  color: #fff;
+}
+.orderTotalText {
+  color: #a1a1aa;
+  font-size: 0.9rem;
+}
+.orderTotalAmount {
+  color: #10b981;
+}
+.statusBadge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+.statusDelivered {
+  background: rgba(16,185,129,0.1);
+  color: #10b981;
+}
+.statusShipped {
+  background: rgba(59,130,246,0.1);
+  color: #3b82f6;
+}
+.statusPending {
+  background: rgba(245,158,11,0.1);
+  color: #f59e0b;
+}

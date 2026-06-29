@@ -41,6 +41,22 @@ const createOrder = async (req, res) => {
             receipt: crypto.randomBytes(10).toString("hex"),
         };
 
+        if (process.env.PAYMENT_BYPASS_MODE === "true") {
+            const mockOrder = {
+                id: `pay_mock_${Date.now()}`,
+                amount: totalAmount * 100,
+                currency: "INR",
+                status: "created",
+            };
+
+            return res.status(200).json({
+                success: true,
+                order: mockOrder,
+                totalAmount,
+                bypassMode: true,
+            });
+        }
+
         const order = await razorpay.orders.create(options);
 
         res.status(200).json({
@@ -67,6 +83,18 @@ const processPayment = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Missing payment verification details",
+            });
+        }
+
+        if (process.env.PAYMENT_BYPASS_MODE === "true") {
+            await Order.findOneAndUpdate(
+                { paymentId: razorpay_order_id },
+                { isPaid: true, status: "pending" }
+            );
+
+            return res.status(200).json({
+                success: true,
+                message: "Mock payment verified successfully",
             });
         }
 

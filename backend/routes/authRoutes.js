@@ -13,7 +13,7 @@ import verifiedEmail from "../middleware/verifiedEmail.js";
 const routes = express.Router();
 
 routes.post("/register", registerUser);
-routes.post("/login", verifiedEmail, loginUser);
+routes.post("/login", loginUser);
 routes.post("/verify-email", verifyEmail);
 routes.post("/logout", logoutUser);
 routes.get("/users", protect, admin, getUsers);

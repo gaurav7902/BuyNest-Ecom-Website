@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 import ProductCard from "../components/ProductCard";
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
         setProducts(data.slice(0, 4)); // Featured products
       } catch (error) {
         console.error(error);
+        toast.error('Failed to load featured products.');
       } finally {
         setLoading(false);
       }

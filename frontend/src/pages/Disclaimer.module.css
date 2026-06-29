@@ -1,0 +1,37 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px;
+  background: #18181b;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  line-height: 1.8;
+  color: #a1a1aa;
+}
+
+.title {
+  color: #fff;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
+}
+
+.paragraph {
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  color: #10b981;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.sectionText {
+  margin-bottom: 15px;
+}
+
+.footerNote {
+  margin-top: 30px;
+  font-style: italic;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,47 @@
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #18181b;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  color: #fafafa;
+}
+.title {
+  color: #10b981;
+  margin-bottom: 20px;
+}
+.tableWrapper {
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.row {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.th {
+  padding: 15px;
+  text-align: left;
+  color: #a1a1aa;
+  font-size: 0.9rem;
+}
+.td {
+  padding: 15px;
+  text-align: left;
+}
+.roleBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+.roleAdmin {
+  background: rgba(234,88,12,0.2);
+  color: #10b981;
+}
+.roleUser {
+  background: rgba(16,185,129,0.2);
+  color: #10b981;
+}

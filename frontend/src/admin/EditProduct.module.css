@@ -1,0 +1,42 @@
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: #18181b;
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.title {
+  color: #10b981;
+  margin-bottom: 20px;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.input {
+  padding: 12px;
+  background: #09090b;
+  border: 1px solid #27272a;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+}
+.imageUploadContainer {
+  padding: 15px;
+  border: 1px dashed #10b981;
+  border-radius: 8px;
+}
+.label {
+  display: block;
+  margin-bottom: 10px;
+  color: #a1a1aa;
+}
+.fileInput {
+  color: #fff;
+}
+.submitBtn {
+  margin-top: 10px;
+}

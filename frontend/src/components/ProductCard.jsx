@@ -4,7 +4,7 @@ import "../styles/ProductCard.css";
 
 const ProductCard = ({ product }) => {
   return (
-    <div className='product-card'>
+    <Link to={`/product/${product._id}`} className='product-card'>
       <img
         src={product.imageUrl}
         alt={product.name}
@@ -13,12 +13,13 @@ const ProductCard = ({ product }) => {
       <div className='product-info'>
         <h3>{product.name}</h3>
         <p className='price'>₹{product.price}</p>
-        <Link to={`/product/${product._id}`} className='btn'>
+        <span className='btn'>
           View Details
-        </Link>
+        </span>
       </div>
-    </div>
+    </Link>
   );
+
 };
 
 export default ProductCard;

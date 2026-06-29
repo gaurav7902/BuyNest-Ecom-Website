@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 import { addToCart } from '../redux/cartSlice';
 import '../styles/Product.css';
+import styles from './ProductDetails.module.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -18,6 +20,7 @@ const ProductDetail = () => {
         setProduct(data);
       } catch (error) {
         console.error(error);
+        toast.error('Failed to load product details.');
       } finally {
         setLoading(false);
       }
@@ -36,98 +39,59 @@ const ProductDetail = () => {
           qty: 1,
         })
       );
-      alert('Successfully added to your cart!');
+      toast.success('Successfully added to your cart!');
     }
   };
 
-  if (loading)
-    return (
-      <div style={{ textAlign: 'center', margin: '100px', color: '#10b981' }}>
-        Loading Product...
-      </div>
-    );
-  if (!product)
-    return (
-      <div style={{ textAlign: 'center', margin: '100px', color: '#ef4444' }}>
-        Product Not Found
-      </div>
-    );
+  if (loading) return <div className={styles.loading}>Loading Product...</div>;
+  if (!product) return <div className={styles.notFound}>Product Not Found</div>;
 
   return (
-    <div
-      className='product-detail-wrapper'
-      style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}
-    >
-      {/* Breadcrumb Navigator */}
-      <div
-        style={{ color: '#a1a1aa', marginBottom: '20px', fontSize: '0.95rem' }}
-      >
-        <Link to='/' style={{ color: '#10b981' }}>
+    <div className={`${styles.wrapper} product-detail-wrapper`}>
+      <div className={styles.breadcrumb}>
+        <Link to='/' className={styles.breadcrumbLink}>
           Home
         </Link>{' '}
-        /{' '}
-        <Link to='/shop' style={{ color: '#10b981' }}>
+        &gt;
+        <Link to='/shop' className={styles.breadcrumbLink}>
+          {' '}
           Shop
         </Link>{' '}
-        / {product.category} /{' '}
-        <span style={{ color: '#fff' }}>{product.name}</span>
+        &gt;
+        <span className={styles.breadcrumbCurrent}> {product.name}</span>
       </div>
 
       <div className='product-detail'>
-        {/* Left Side: Image */}
-        <div className='detail-image-container'>
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className='detail-image'
-          />
-        </div>
-
-        {/* Right Side: Information Block */}
+        <img
+          src={product.imageUrl}
+          alt={product.name}
+          className='detail-image'
+        />
         <div className='detail-info'>
-          <h2 style={{ fontSize: '2.8rem', marginBottom: '10px' }}>
-            {product.name}
-          </h2>
+          <h1 className={styles.title}>{product.name}</h1>
+          <p className={styles.price}>₹{product.price.toFixed(2)}</p>
 
-          <p
-            className='detail-price'
-            style={{ fontSize: '2.5rem', margin: '15px 0' }}
-          >
-            ₹{product.price.toFixed(2)}
-          </p>
-
-          {/* Description */}
-          <div style={{ marginBottom: '25px' }}>
-            <h4 style={{ color: '#fff', marginBottom: '10px' }}>
-              Product Description
-            </h4>
-            <p style={{ color: '#a1a1aa', lineHeight: '1.8' }}>
-              {product.description}
-            </p>
+          <div className={styles.descriptionContainer}>
+            <h3 className={styles.descriptionTitle}>Description</h3>
+            <p className={styles.descriptionText}>{product.description}</p>
           </div>
 
-          {/* Cart & Stock Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div className={styles.actionContainer}>
             <button
               onClick={handleAddToCart}
-              className='btn'
-              style={{ flexGrow: '1', padding: '18px', fontSize: '1.2rem' }}
+              className={`btn ${styles.addToCartBtn}`}
             >
-              Add to Shopping Cart
+              Add to Cart
             </button>
           </div>
 
-          <p
-            style={{
-              marginTop: '20px',
-              color: product.stock > 0 ? '#10b981' : '#ef4444',
-              fontWeight: '600',
-            }}
+          <div
+            className={`${styles.stockStatus} ${product.stock > 0 ? styles.inStock : styles.outOfStock}`}
           >
             {product.stock > 0
-              ? `● In Stock (${product.stock} units available)`
-              : `● Temporarily Out of Stock`}
-          </p>
+              ? `In Stock (${product.stock} available)`
+              : 'Out of Stock'}
+          </div>
         </div>
       </div>
     </div>

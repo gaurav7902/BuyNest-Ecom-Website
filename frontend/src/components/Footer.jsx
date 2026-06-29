@@ -1,50 +1,34 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styles from './Footer.module.css';
 
 const Footer = () => {
   return (
-    <footer
-      style={{
-        background: "#09090b",
-        borderTop: "1px solid rgba(255, 255, 255, 0.05)",
-        padding: "40px 20px",
-        marginTop: "auto",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "20px",
-        }}
-      >
+    <footer className={styles.footer}>
+      <div className={styles.footerContainer}>
         <div>
-          <h3 style={{ color: "#10b981", marginBottom: "10px" }}>BuyNest</h3>
-          <p style={{ color: "#a1a1aa", fontSize: "0.9rem" }}>
+          <h3 className={styles.logo}>BuyNest</h3>
+          <p className={styles.tagline}>
             Premium E-Commerce Platform.
           </p>
         </div>
 
-        <div style={{ display: "flex", gap: "20px" }}>
-          <Link to='/about' style={{ color: "#a1a1aa", fontSize: "0.9rem" }}>
+        <div className={styles.linkGroup}>
+          <Link to='/about' className={styles.footerLink}>
             About Us
           </Link>
-          <Link to='/return' style={{ color: "#a1a1aa", fontSize: "0.9rem" }}>
+          <Link to='/return' className={styles.footerLink}>
             Return Policy
           </Link>
           <Link
             to='/disclaimer'
-            style={{ color: "#a1a1aa", fontSize: "0.9rem" }}
+            className={styles.footerLink}
           >
             Disclaimer
           </Link>
         </div>
 
-        <div style={{ color: "#a1a1aa", fontSize: "0.9rem" }}>
+        <div className={styles.copyright}>
           &copy; {new Date().getFullYear()} BuyNest. All rights reserved.
         </div>
       </div>

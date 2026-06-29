@@ -1,0 +1,81 @@
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.breadcrumb {
+  color: #a1a1aa;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.breadcrumbLink {
+  color: #10b981;
+  text-decoration: none;
+}
+
+.breadcrumbCurrent {
+  color: #fff;
+}
+
+.title {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 2.5rem;
+  margin: 15px 0;
+}
+
+.descriptionContainer {
+  margin-bottom: 25px;
+}
+
+.descriptionTitle {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.descriptionText {
+  color: #a1a1aa;
+  line-height: 1.8;
+}
+
+.actionContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.addToCartBtn {
+  flex-grow: 1;
+  padding: 18px;
+  font-size: 1.2rem;
+}
+
+.stockStatus {
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+.inStock {
+  color: #10b981;
+}
+
+.outOfStock {
+  color: #ef4444;
+}
+
+.loading {
+  text-align: center;
+  margin: 100px;
+  color: #10b981;
+}
+
+.notFound {
+  text-align: center;
+  margin: 100px;
+  color: #ef4444;
+}

@@ -2,12 +2,12 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import dotenv from "dotenv";
+import path from "path";
 import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
-// import cartRoutes from "./routes/cartRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -40,14 +40,13 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
+// Serve static files from the frontend build directory
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/build")));
+    const distPath = path.resolve(process.cwd(), "..", "frontend", "dist");
+    app.use(express.static(distPath));
+
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
-    });
-} else {
-    app.get("/", (req, res) => {
-        res.send("BuyNest API is running in development mode...");
+        res.sendFile(path.join(distPath, "index.html"));
     });
 }
 

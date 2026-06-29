@@ -3,12 +3,13 @@ import sendEmail from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const generateToken = id => {
+const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 const verifyEmail = async (req, res) => {
-    const { email, otp } = req.body;
+    const { email: rawEmail, otp } = req.body;
+    const email = rawEmail?.toLowerCase();
 
     try {
         const user = await User.findOne({ email });
@@ -17,7 +18,7 @@ const verifyEmail = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (user.isVerified) {
+        if (user.verified) {
             return res
                 .status(400)
                 .json({ message: "Email is already verified" });
@@ -27,7 +28,7 @@ const verifyEmail = async (req, res) => {
             return res.status(400).json({ message: "Invalid OTP" });
         }
 
-        user.isVerified = true;
+        user.verified = true;
         user.otp = null; // Clear the OTP after successful verification
         await user.save();
 
@@ -42,7 +43,8 @@ const verifyEmail = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email: rawEmail, password } = req.body;
+    const email = rawEmail?.toLowerCase();
 
     if (!name || !email || !password) {
         return res
@@ -54,7 +56,35 @@ const registerUser = async (req, res) => {
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-            return res.status(409).json({ message: "User already exists" });
+            if (existingUser.verified) {
+                return res.status(409).json({ message: "User already exists" });
+            } else {
+                // User exists but is not verified. Resend OTP and inform the frontend.
+                let otp = existingUser.otp;
+                if (!otp) {
+                    otp = Math.floor(100000 + Math.random() * 900000);
+                    existingUser.otp = otp;
+                    await existingUser.save();
+                }
+
+                const message = `Your OTP for email verification is: ${otp}`;
+                try {
+                    await sendEmail(
+                        existingUser.email,
+                        "Verify your BuyNest account",
+                        message
+                    );
+                } catch (mailError) {
+                    console.error("Email sending failed during registration check:", mailError);
+                    // We don't necessarily want to crash the whole request, but the user needs the OTP
+                }
+
+                return res.status(403).json({
+                    message: "Account already exists but is not verified. OTP has been resent.",
+                    verified: false,
+                    email: existingUser.email,
+                });
+            }
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -67,19 +97,22 @@ const registerUser = async (req, res) => {
         });
 
         if (newUser) {
-            const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
-            newUser.otp = otp; // Store the OTP in the user document
+            const otp = Math.floor(100000 + Math.random() * 900000);
+            newUser.otp = otp;
 
-            // mail
             const message = `
         Welcome to BuyNest Your account has been successfully created.
         Thank you for registering with us. We are excited to have you on board!
         Your OTP for email verification is: ${otp}`;
-            await sendEmail(
-                email,
-                "Welcome to BuyNest, your OTP for registration",
-                message
-            ); // Send the welcome email with OTP
+            try {
+                await sendEmail(
+                    email,
+                    "Welcome to BuyNest, your OTP for registration",
+                    message
+                );
+            } catch (mailError) {
+                console.error("Email sending failed during registration:", mailError);
+            }
 
             await newUser.save();
 
@@ -104,7 +137,8 @@ const registerUser = async (req, res) => {
 
 // login
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { email: rawEmail, password } = req.body;
+    const email = rawEmail?.toLowerCase();
 
     if (!email || !password) {
         return res
@@ -127,6 +161,32 @@ const loginUser = async (req, res) => {
             return res
                 .status(401)
                 .json({ message: "Invalid email or password" });
+        }
+
+        if (!user.verified) {
+            let otp = user.otp;
+            if (!otp) {
+                otp = Math.floor(100000 + Math.random() * 900000);
+                user.otp = otp;
+                await user.save();
+            }
+
+            const message = `Your OTP for email verification is: ${otp}`;
+            try {
+                await sendEmail(
+                    user.email,
+                    "Verify your BuyNest account",
+                    message
+                );
+            } catch (mailError) {
+                console.error("Email sending failed during login:", mailError);
+            }
+
+            return res.status(403).json({
+                message: "Please verify your email first",
+                verified: false,
+                email: user.email,
+            });
         }
 
         res.status(200).json({

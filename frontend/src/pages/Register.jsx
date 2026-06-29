@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
+import toast from 'react-hot-toast';
 import '../styles/Auth.css';
 
 const Register = () => {
@@ -8,6 +10,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,23 +20,24 @@ const Register = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email: email.toLowerCase(), password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert(
-          'User registered successfully, check your email for verification.'
-        );
-        // Redirect to login page or home page
-        login(data);
-        navigate('/');
+        toast.success('User registered successfully, check your email for verification.');
+        // Redirect to OTP verification page
+        navigate('/verify-otp', { state: { email } });
+      } else if (response.status === 403 && data.verified === false) {
+        toast.success(data.message || 'Verification OTP has been resent to your email.');
+        navigate('/verify-otp', { state: { email: data.email } });
       } else {
-        console.error('Error registering user');
+        toast.error(data.message || 'Error registering user');
       }
     } catch (error) {
       console.error('Error registering user:', error);
+      toast.error('An error occurred during registration. Please try again.');
     }
   };
 

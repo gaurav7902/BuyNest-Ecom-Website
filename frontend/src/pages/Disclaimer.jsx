@@ -1,31 +1,14 @@
 import React from "react";
-
-const textualStyle = {
-  maxWidth: "900px",
-  margin: "0 auto",
-  padding: "40px",
-  background: "#18181b",
-  borderRadius: "16px",
-  border: "1px solid rgba(255, 255, 255, 0.05)",
-  lineHeight: "1.8",
-  color: "#a1a1aa",
-};
+import styles from "./Disclaimer.module.css";
 
 const Disclaimer = () => {
   return (
-    <div style={textualStyle}>
-      <h2
-        style={{
-          color: "#fff",
-          marginBottom: "20px",
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
-          paddingBottom: "15px",
-        }}
-      >
+    <div className={styles.container}>
+      <h2 className={styles.title}>
         Legal & Site Disclaimer
       </h2>
 
-      <p style={{ marginBottom: "20px" }}>
+      <p className={styles.paragraph}>
         The data, interfaces, and graphical components represented across the
         ShopNest domain strictly act uniquely as an educational development
         platform. This codebase models rigorous application structures and
@@ -33,10 +16,10 @@ const Disclaimer = () => {
         usage.
       </p>
 
-      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 className={styles.sectionTitle}>
         1. Accuracy of Materials
       </h4>
-      <p style={{ marginBottom: "15px" }}>
+      <p className={styles.sectionText}>
         The materials spanning the ShopNest interface may heavily include
         dynamic technical, typographical, or dummy photographic elements.
         Product matrices mapped in the DB pipeline do absolutely not correlate
@@ -44,27 +27,27 @@ const Disclaimer = () => {
         Unsplash imagery protocols.
       </p>
 
-      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 className={styles.sectionTitle}>
         2. Payment Processing Restrictions
       </h4>
-      <p style={{ marginBottom: "15px" }}>
+      <p className={styles.sectionText}>
         No authentic financial variables are handled natively within this
         environment. All payment endpoints forcefully bind exclusively to
         external testing-based networks (Sandbox Razorpay environments). No
         exact deductibles exist.
       </p>
 
-      <h4 style={{ color: "#10b981", marginTop: "25px", marginBottom: "10px" }}>
+      <h4 className={styles.sectionTitle}>
         3. External Binding Links
       </h4>
-      <p style={{ marginBottom: "15px" }}>
+      <p className={styles.sectionText}>
         ShopNest operates completely independent domains and takes strictly zero
         absolute parameter responsibility over the specific contents or
         behaviors populated via external routing anchors generated implicitly by
         third-party configurations.
       </p>
 
-      <p style={{ marginTop: "30px", fontStyle: "italic", fontSize: "0.9rem" }}>
+      <p className={styles.footerNote}>
         By interacting natively within this codebase, you unconditionally signal
         acceptance bounded by these parameters efficiently.
       </p>

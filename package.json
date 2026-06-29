@@ -4,13 +4,11 @@
   "description": "",
   "main": "eslint.config.js",
   "scripts": {
-    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "build": "cd frontend && npm install && npm run build",
-    "start": "cd backend && npm start",
+    "start": "NODE_ENV=production cd backend && npm start",
     "dev:server": "cd backend && npm run dev",
     "dev:client": "cd frontend && npm run dev",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "seed": "cd backend && node seed.js"
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
   },
   "author": "Gaurav",
   "license": "ISC",
