@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import styles from './AddProduct.module.css';
+import { apiUrl } from '../config/api';
 
 const AddProduct = () => {
   const { user } = useContext(AuthContext);
@@ -17,11 +18,6 @@ const AddProduct = () => {
   });
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  if (!user || user.role !== 'admin') {
-    navigate('/');
-    return null;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +36,7 @@ const AddProduct = () => {
     data.append('image', image);
 
     try {
-      const res = await fetch('/api/products', {
+      const res = await fetch(apiUrl('/products'), {
         method: 'POST',
         headers: { Authorization: `Bearer ${user.token}` },
         body: data,

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import ProductCard from "../components/ProductCard";
 import "../styles/Product.css";
+import { apiUrl } from "../config/api";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -11,7 +12,7 @@ const Shop = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch(apiUrl("/products"));
         const data = await res.json();
         setProducts(data);
       } catch (error) {

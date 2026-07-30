@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import styles from './EditProduct.module.css';
+import { apiUrl } from '../config/api';
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -21,7 +22,7 @@ const EditProduct = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const res = await fetch(`/api/products/${id}`);
+      const res = await fetch(apiUrl(`/products/${id}`));
       const data = await res.json();
       setFormData({
         name: data.name,
@@ -46,7 +47,7 @@ const EditProduct = () => {
     if (image) data.append('image', image);
 
     try {
-      const res = await fetch(`/api/products/${id}`, {
+      const res = await fetch(apiUrl(`/products/${id}`), {
         method: 'PUT',
         headers: { Authorization: `Bearer ${user.token}` },
         body: data,

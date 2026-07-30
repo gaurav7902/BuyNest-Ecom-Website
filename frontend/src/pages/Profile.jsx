@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './Profile.module.css';
+import { apiUrl } from '../config/api';
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
@@ -17,7 +18,7 @@ const Profile = () => {
     }
     const fetchMyOrders = async () => {
       try {
-        const res = await fetch('/api/orders/myorders', {
+        const res = await fetch(apiUrl('/orders/myorders'), {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         const data = await res.json();

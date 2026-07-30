@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import styles from './VerifyOTP.module.css';
+import { apiUrl } from '../config/api';
 
 const VerifyOTP = () => {
   const [otp, setOtp] = useState(new Array(6).fill(''));
@@ -47,7 +48,7 @@ const VerifyOTP = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/auth/verify-email', {
+      const response = await fetch(apiUrl('/auth/verify-email'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 import Product from "../models/Product.js";
 import Order from "../models/Order.js";
 
@@ -11,122 +12,179 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
+const addressFields = [
+    "fullName",
+    "street",
+    "city",
+    "state",
+    "postalCode",
+    "country",
+];
+
+const createError = (message, status) => Object.assign(new Error(message), { status });
+
+const validateAddress = (address) => {
+    if (!address || typeof address !== "object") {
+        throw createError("Shipping address is required", 400);
+    }
+
+    for (const field of addressFields) {
+        if (typeof address[field] !== "string" || !address[field].trim()) {
+            throw createError(`Shipping address field '${field}' is required`, 400);
+        }
+    }
+};
+
+const normalizeItems = (items) => {
+    if (!Array.isArray(items) || items.length === 0) {
+        throw createError("At least one cart item is required", 400);
+    }
+
+    const combinedItems = new Map();
+    for (const item of items) {
+        const productId = item?._id || item?.product;
+        if (!mongoose.isValidObjectId(productId)) {
+            throw createError("Each cart item must reference a valid product", 400);
+        }
+        if (!Number.isInteger(item.quantity) || item.quantity < 1) {
+            throw createError("Each item must have a positive whole-number quantity", 400);
+        }
+
+        const id = productId.toString();
+        combinedItems.set(id, (combinedItems.get(id) || 0) + item.quantity);
+    }
+
+    return [...combinedItems].map(([product, quantity]) => ({ product, quantity }));
+};
+
+const prepareItems = async (items, session) => {
+    let totalAmount = 0;
+    const preparedItems = [];
+
+    for (const item of items) {
+        const product = await Product.findOne({
+            _id: item.product,
+            isActive: true,
+        }).session(session);
+
+        if (!product) {
+            throw createError(`Product is unavailable: ${item.product}`, 404);
+        }
+        if (product.stock < item.quantity) {
+            throw createError(`Insufficient stock for ${product.name}`, 400);
+        }
+
+        totalAmount += product.price * item.quantity;
+        preparedItems.push({
+            product: product._id,
+            quantity: item.quantity,
+            name: product.name,
+            image: product.imageUrl,
+            price: product.price,
+        });
+    }
+
+    return { totalAmount, preparedItems };
+};
+
 const createOrder = async (req, res) => {
     try {
-        const { items } = req.body;
-
-        if (!items || !Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: "Items are required to create a payment order",
-            });
-        }
-
-        // calculating on the server to prevent price manipulation
-        let totalAmount = 0;
-        for (const item of items) {
-            const product = await Product.findById(item._id);
-            if (!product) {
-                return res.status(404).json({
-                    success: false,
-                    message: `Product not found: ${item._id}`,
-                });
-            }
-            totalAmount += product.price * item.quantity;
-        }
-
-        const options = {
-            amount: totalAmount * 100, // razorpay expects amount in paise
+        const items = normalizeItems(req.body.items);
+        const { totalAmount } = await prepareItems(items);
+        const order = await razorpay.orders.create({
+            amount: Math.round(totalAmount * 100),
             currency: "INR",
             receipt: crypto.randomBytes(10).toString("hex"),
-        };
-
-        if (process.env.PAYMENT_BYPASS_MODE === "true") {
-            const mockOrder = {
-                id: `pay_mock_${Date.now()}`,
-                amount: totalAmount * 100,
-                currency: "INR",
-                status: "created",
-            };
-
-            return res.status(200).json({
-                success: true,
-                order: mockOrder,
-                totalAmount,
-                bypassMode: true,
-            });
-        }
-
-        const order = await razorpay.orders.create(options);
-
-        res.status(200).json({
-            success: true,
-            order,
-            totalAmount,
         });
+
+        return res.status(200).json({ success: true, order, totalAmount });
     } catch (error) {
         console.error("Error creating order:", error);
-        res.status(500).json({
+        return res.status(error.status || 500).json({
             success: false,
-            message: "Failed to create order",
-            error: error.message,
+            message: error.status ? error.message : "Failed to create payment order",
         });
     }
 };
 
 const processPayment = async (req, res) => {
     try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-            req.body;
-
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
         if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-            return res.status(400).json({
-                success: false,
-                message: "Missing payment verification details",
-            });
+            throw createError("Payment verification details are required", 400);
         }
 
-        if (process.env.PAYMENT_BYPASS_MODE === "true") {
-            await Order.findOneAndUpdate(
-                { paymentId: razorpay_order_id },
-                { isPaid: true, status: "pending" }
-            );
-
-            return res.status(200).json({
-                success: true,
-                message: "Mock payment verified successfully",
-            });
-        }
-
-        // verify the payment signature
+        validateAddress(req.body.address);
+        const items = normalizeItems(req.body.items);
         const generatedSignature = crypto
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-            .update(razorpay_order_id + "|" + razorpay_payment_id)
+            .update(`${razorpay_order_id}|${razorpay_payment_id}`)
             .digest("hex");
 
-        if (generatedSignature === razorpay_signature) {
-            // Find the order that was created with this Razorpay order ID and mark it as paid
-            await Order.findOneAndUpdate(
-                { paymentId: razorpay_order_id },
-                { isPaid: true, status: "pending" } // Keep as pending until shipped
-            );
-
-            res.status(200).json({
-                success: true,
-                message: "Payment verified successfully",
-            });
-        } else {
-            res.status(400).json({
-                success: false,
-                message: "Invalid payment signature",
-            });
+        if (
+            razorpay_signature.length !== generatedSignature.length ||
+            !crypto.timingSafeEqual(Buffer.from(razorpay_signature), Buffer.from(generatedSignature))
+        ) {
+            throw createError("Invalid payment signature", 400);
         }
+
+        const existingOrder = await Order.findOne({ paymentId: razorpay_order_id });
+        if (existingOrder) {
+            if (existingOrder.user.toString() !== req.user._id.toString()) {
+                throw createError("Payment does not belong to this user", 403);
+            }
+            return res.status(200).json({ success: true, order: existingOrder });
+        }
+
+        const session = await Product.startSession();
+        let order;
+        try {
+            await session.withTransaction(async () => {
+                const { totalAmount, preparedItems } = await prepareItems(items, session);
+
+                for (const item of items) {
+                    const product = await Product.findOneAndUpdate(
+                        {
+                            _id: item.product,
+                            isActive: true,
+                            stock: { $gte: item.quantity },
+                        },
+                        { $inc: { stock: -item.quantity } },
+                        { new: true, session }
+                    );
+
+                    if (!product) {
+                        throw createError("Product stock changed during checkout. Please contact support for a refund.", 409);
+                    }
+                }
+
+                [order] = await Order.create(
+                    [{
+                        user: req.user._id,
+                        items: preparedItems,
+                        totalAmount,
+                        address: req.body.address,
+                        paymentId: razorpay_order_id,
+                        isPaid: true,
+                        status: "pending",
+                    }],
+                    { session }
+                );
+            });
+        } finally {
+            await session.endSession();
+        }
+
+        return res.status(201).json({
+            success: true,
+            message: "Payment verified successfully",
+            order,
+        });
     } catch (error) {
         console.error("Error processing payment:", error);
-        res.status(500).json({
+        return res.status(error.status || 500).json({
             success: false,
-            message: "Failed to process payment",
-            error: error.message,
+            message: error.status ? error.message : "Failed to process payment",
         });
     }
 };

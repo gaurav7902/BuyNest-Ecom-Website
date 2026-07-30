@@ -24,6 +24,7 @@ import EditProduct from './admin/EditProduct';
 import AdminOrders from './admin/AdminOrders';
 import AdminUsers from './admin/AdminUsers';
 import GuestRoute from './components/GuestRoute';
+import AdminRoute from './components/AdminRoute';
 import styles from './App.module.css';
 
 function App() {
@@ -69,12 +70,12 @@ function App() {
             <Route path='/checkout/success' element={<Success />} />
             <Route path='/checkout/failure' element={<Failure />} />
             <Route path='/profile' element={<Profile />} />
-            <Route path='/admin' element={<AdminDashboard />} />
-            <Route path='/admin/add-product' element={<AddProduct />} />
-            <Route path='/admin/products' element={<AdminProducts />} />
-            <Route path='/admin/edit-product/:id' element={<EditProduct />} />
-            <Route path='/admin/orders' element={<AdminOrders />} />
-            <Route path='/admin/users' element={<AdminUsers />} />
+            <Route path='/admin' element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+            <Route path='/admin/add-product' element={<AdminRoute><AddProduct /></AdminRoute>} />
+            <Route path='/admin/products' element={<AdminRoute><AdminProducts /></AdminRoute>} />
+            <Route path='/admin/edit-product/:id' element={<AdminRoute><EditProduct /></AdminRoute>} />
+            <Route path='/admin/orders' element={<AdminRoute><AdminOrders /></AdminRoute>} />
+            <Route path='/admin/users' element={<AdminRoute><AdminUsers /></AdminRoute>} />
           </Routes>
         </div>
         <Footer />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import styles from './AdminOrders.module.css';
+import { apiUrl } from '../config/api';
 
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
@@ -8,7 +9,7 @@ const AdminOrders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const res = await fetch('/api/orders', {
+      const res = await fetch(apiUrl('/orders'), {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       const data = await res.json();
@@ -18,7 +19,7 @@ const AdminOrders = () => {
   }, [user]);
 
   const updateStatus = async (id, status) => {
-    const res = await fetch(`/api/orders/${id}/status`, {
+    const res = await fetch(apiUrl(`/orders/${id}/status`), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ const AdminOrders = () => {
             {orders.map((order) => (
               <tr key={order._id} className={styles.row}>
                 <td className={styles.td}>{order._id.substring(0, 8)}...</td>
-                <td className={styles.td}>{order.userId?.name || 'Deleted User'}</td>
+                <td className={styles.td}>{order.user?.name || 'Deleted User'}</td>
                 <td className={styles.td}>₹{order.totalAmount.toFixed(2)}</td>
                 <td className={styles.td}>
                   {new Date(order.createdAt).toLocaleDateString()}
@@ -62,9 +63,9 @@ const AdminOrders = () => {
                     onChange={(e) => updateStatus(order._id, e.target.value)}
                     className={styles.statusSelect}
                   >
-                    <option value='Pending'>Pending</option>
-                    <option value='Shipped'>Shipped</option>
-                    <option value='Delivered'>Delivered</option>
+                    <option value='pending'>Pending</option>
+                    <option value='shipped'>Shipped</option>
+                    <option value='delivered'>Delivered</option>
                   </select>
                 </td>
               </tr>

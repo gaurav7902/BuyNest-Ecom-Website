@@ -4,11 +4,11 @@ import User from "../models/User.js";
 
 const getAdminStats = async (req, res) => {
     try {
-        const orders = await Order.find({});
+        const orders = await Order.find({ isPaid: true });
         const totalOrders = orders.length;
 
         const totalRevenue = orders.reduce(
-            (acc, order) => acc + order.totalPrice,
+            (acc, order) => acc + order.totalAmount,
             0
         );
 
@@ -17,12 +17,10 @@ const getAdminStats = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            data: {
-                totalRevenue,
-                totalOrders,
-                totalProducts,
-                totalUsers,
-            },
+            totalRevenue,
+            totalOrders,
+            totalProducts,
+            totalUsers,
         });
     } catch (error) {
         console.error("Error fetching admin stats:", error);

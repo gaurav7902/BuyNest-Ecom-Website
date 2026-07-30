@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import connectDB from "./config/db.js";
 import dotenv from "dotenv";
 import path from "path";
@@ -13,21 +15,50 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT);
+
+if (!process.env.VERCEL && (!Number.isInteger(PORT) || PORT <= 0)) {
+    throw new Error("PORT must be set to a valid port number in backend/.env");
+}
 
 //middlewares
 app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'", "https://checkout.razorpay.com"],
+                styleSrc: ["'self'", "'unsafe-inline'"],
+                imgSrc: ["'self'", "data:", "https:"],
+                frameSrc: ["https://checkout.razorpay.com"],
+            },
+        },
+    })
+);
+app.use(
     cors({
-        origin: [
-            "http://localhost:5173",
-            "https://127.0.0.1:5173",
-            process.env.FRONTEND_URL,
-        ],
+        origin: process.env.FRONTEND_URL,
         credentials: true,
     })
 );
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
+
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 300,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+});
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 20,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+});
+
+app.use("/api", apiLimiter);
+app.use("/api/auth", authLimiter);
 
 //routes
 app.get("/health", (req, res) => {
@@ -64,4 +95,10 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(PORT);
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server listening on port ${PORT}`);
+    });
+}
+
+export default app;

@@ -6,6 +6,7 @@ import { clearCart } from '../redux/cartSlice';
 import toast from 'react-hot-toast';
 import '../styles/Checkout.css';
 import { AuthContext } from '../context/AuthContext.jsx';
+import { apiUrl } from '../config/api';
 
 const Checkout = () => {
   const { user } = useContext(AuthContext);
@@ -58,60 +59,27 @@ const Checkout = () => {
     try {
       // 1. Create Razorpay Order
       const paymentResponse = await axios.post(
-        '/api/payment/order',
-        {
-          items: cartItems.map((item) => ({
-            _id: item.productId,
-            quantity: item.qty,
-          })),
-        },
-        authHeader
-      );
-
-      const {
-        order: razorpayOrder,
-        totalAmount,
-        bypassMode,
-      } = paymentResponse.data;
-
-      // 2. Create Order in our database (with paymentId = razorpayOrder.id)
-      await axios.post(
-        '/api/orders',
+        apiUrl('/payment/order'),
         {
           items: cartItems.map((item) => ({
             _id: item.productId,
             quantity: item.qty,
           })),
           address,
-          paymentId: razorpayOrder.id,
         },
         authHeader
       );
 
-      if (bypassMode) {
-        try {
-          await axios.post(
-            '/api/payment/verify',
-            {
-              razorpay_order_id: razorpayOrder.id,
-              razorpay_payment_id: 'pay_mock_payment_id',
-              razorpay_signature: 'mock_signature',
-            },
-            authHeader
-          );
-
-          dispatch(clearCart());
-          navigate('/checkout/success');
-        } catch (err) {
-          setError('Mock payment verification failed.');
-        }
-        return;
-      }
+      const { order: razorpayOrder, totalAmount } = paymentResponse.data;
 
       // 3. Configure Razorpay Checkout
+      if (!window.Razorpay) {
+        throw new Error('Payment checkout could not be loaded. Please refresh and try again.');
+      }
+
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: totalAmount * 100,
+        amount: razorpayOrder.amount,
         currency: 'INR',
         name: 'BuyNest',
         description: 'Payment for your order',
@@ -120,9 +88,14 @@ const Checkout = () => {
           try {
             // 4. Verify Payment
             await axios.post(
-              '/api/payment/verify',
-              {
-                razorpay_order_id: response.razorpay_order_id,
+            apiUrl('/payment/verify'),
+            {
+              items: cartItems.map((item) => ({
+                _id: item.productId,
+                quantity: item.qty,
+              })),
+              address,
+              razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
               },

@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { addToCart } from '../redux/cartSlice';
 import '../styles/Product.css';
 import styles from './ProductDetails.module.css';
+import { apiUrl } from '../config/api';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`/api/products/${id}`);
+        const res = await fetch(apiUrl(`/products/${id}`));
         const data = await res.json();
         setProduct(data);
       } catch (error) {
