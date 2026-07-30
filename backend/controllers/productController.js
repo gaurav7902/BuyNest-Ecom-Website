@@ -1,6 +1,21 @@
 import Product from "../models/Product.js";
 import cloudinary from "../config/cloudinary.js";
-import fs from "fs";
+
+const uploadImage = (file) =>
+    new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+            { resource_type: "image" },
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(result);
+            }
+        );
+
+        uploadStream.end(file.buffer);
+    });
 
 const getProductById = async (req, res) => {
     try {
@@ -21,22 +36,13 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
     try {
         const { name, description, price, category, stock } = req.body;
-        const image = req.file ? req.file.path : null;
-
         let imageUrl = null;
         let cloudinaryId = null;
 
-        if (image) {
-            const result = await cloudinary.uploader.upload(image);
+        if (req.file) {
+            const result = await uploadImage(req.file);
             imageUrl = result.secure_url;
             cloudinaryId = result.public_id;
-
-            // Delete local file after upload
-            try {
-                await fs.promises.unlink(image);
-            } catch (error) {
-                console.error("Failed to delete local file:", error);
-            }
         }
 
         const product = new Product({
@@ -64,25 +70,16 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const { name, description, price, category, stock } = req.body;
-        const image = req.file ? req.file.path : null;
-
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
 
-        if (image) {
+        if (req.file) {
             // upload new image
-            const result = await cloudinary.uploader.upload(image);
+            const result = await uploadImage(req.file);
             const newImageUrl = result.secure_url;
             const newCloudinaryId = result.public_id;
-
-            // delete local file
-            try {
-                await fs.promises.unlink(image);
-            } catch (error) {
-                console.error("Failed to delete local file:", error);
-            }
 
             // delete old image from Cloudinary if it exists
             if (product.cloudinaryId) {

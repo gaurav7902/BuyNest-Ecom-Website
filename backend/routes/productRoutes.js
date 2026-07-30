@@ -1,5 +1,4 @@
 import express from "express";
-import fs from "fs";
 import { protect } from "../middleware/authMiddleware.js";
 import { admin } from "../middleware/adminMiddleware.js";
 import {
@@ -11,20 +10,10 @@ import {
 } from "../controllers/productController.js";
 import multer from "multer";
 
-const upload = multer({ dest: "public/uploads/" });
+// Serverless deployments have no durable project filesystem. Keep the image in
+// memory only while it is being streamed to Cloudinary by the controller.
+const upload = multer({ storage: multer.memoryStorage() });
 const routes = express.Router();
-
-// delete files from local storage after upload
-routes.use(
-    (upload.single("image"),
-    (req, res, next) => {
-        if (req.file) {
-            // Delete the uploaded file
-            fs.unlinkSync(req.file.path);
-        }
-        next();
-    })
-);
 
 routes
     .route("/")
