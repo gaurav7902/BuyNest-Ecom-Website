@@ -57,7 +57,7 @@ const authLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-app.use("/api", apiLimiter);
+app.use("/api/health", apiLimiter);
 app.use("/api/auth", authLimiter);
 
 //routes
