@@ -4,7 +4,7 @@
   padding: 30px;
   background: #18181b;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   color: #fafafa;
 }
 .title {
@@ -19,7 +19,7 @@
   border-collapse: collapse;
 }
 .row {
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .th {
   padding: 15px;

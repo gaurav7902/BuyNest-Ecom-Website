@@ -74,7 +74,9 @@ const Checkout = () => {
 
       // 3. Configure Razorpay Checkout
       if (!window.Razorpay) {
-        throw new Error('Payment checkout could not be loaded. Please refresh and try again.');
+        throw new Error(
+          'Payment checkout could not be loaded. Please refresh and try again.'
+        );
       }
 
       const options = {
@@ -88,14 +90,14 @@ const Checkout = () => {
           try {
             // 4. Verify Payment
             await axios.post(
-            apiUrl('/payment/verify'),
-            {
-              items: cartItems.map((item) => ({
-                _id: item.productId,
-                quantity: item.qty,
-              })),
-              address,
-              razorpay_order_id: response.razorpay_order_id,
+              apiUrl('/payment/verify'),
+              {
+                items: cartItems.map((item) => ({
+                  _id: item.productId,
+                  quantity: item.qty,
+                })),
+                address,
+                razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
               },

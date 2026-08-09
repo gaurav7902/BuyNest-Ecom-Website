@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import ProductCard from "../components/ProductCard";
-import { Link } from "react-router-dom";
-import { apiUrl } from "../config/api";
+import ProductCard from '../components/ProductCard';
+import { Link } from 'react-router-dom';
+import { apiUrl } from '../config/api';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -11,7 +11,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(apiUrl("/products"));
+        const res = await fetch(apiUrl('/products'));
         const data = await res.json();
         setProducts(data.slice(0, 4)); // Featured products
       } catch (error) {
@@ -41,7 +41,9 @@ const Home = () => {
         </div>
       )}
       <div style={{ textAlign: 'center', marginTop: '40px' }}>
-        <Link to='/shop' className='btn'>Shop All Products</Link>
+        <Link to='/shop' className='btn'>
+          Shop All Products
+        </Link>
       </div>
     </div>
   );

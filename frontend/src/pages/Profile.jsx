@@ -53,9 +53,7 @@ const Profile = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <h2 className={styles.name}>
-            My Profile
-          </h2>
+          <h2 className={styles.name}>My Profile</h2>
           <p className={styles.detail}>
             <strong>Name:</strong> {user.name}
           </p>
@@ -66,17 +64,12 @@ const Profile = () => {
             Account Type: {user.role.toUpperCase()}
           </span>
         </div>
-        <button
-          onClick={handleLogout}
-          className={`btn ${styles.logoutBtn}`}
-        >
+        <button onClick={handleLogout} className={`btn ${styles.logoutBtn}`}>
           Logout
         </button>
       </div>
 
-      <h3 className={styles.orderHistoryTitle}>
-        Order History
-      </h3>
+      <h3 className={styles.orderHistoryTitle}>Order History</h3>
       {loading ? (
         <p className={styles.loadingText}>Fetching your orders...</p>
       ) : orders.length === 0 ? (
@@ -91,13 +84,11 @@ const Profile = () => {
       ) : (
         <div className={styles.ordersGrid}>
           {orders.map((order) => (
-            <div
-              key={order._id}
-              className={styles.orderItem}
-            >
+            <div key={order._id} className={styles.orderItem}>
               <div>
                 <p className={styles.orderInfoText}>
-                  Order ID: <span className={styles.orderWhite}>{order._id}</span>
+                  Order ID:{' '}
+                  <span className={styles.orderWhite}>{order._id}</span>
                 </p>
                 <p className={styles.orderInfoText}>
                   Placed On:{' '}

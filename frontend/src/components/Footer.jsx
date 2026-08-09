@@ -8,9 +8,7 @@ const Footer = () => {
       <div className={styles.footerContainer}>
         <div>
           <h3 className={styles.logo}>BuyNest</h3>
-          <p className={styles.tagline}>
-            Premium E-Commerce Platform.
-          </p>
+          <p className={styles.tagline}>Premium E-Commerce Platform.</p>
         </div>
 
         <div className={styles.linkGroup}>
@@ -20,10 +18,7 @@ const Footer = () => {
           <Link to='/return' className={styles.footerLink}>
             Return Policy
           </Link>
-          <Link
-            to='/disclaimer'
-            className={styles.footerLink}
-          >
+          <Link to='/disclaimer' className={styles.footerLink}>
             Disclaimer
           </Link>
         </div>

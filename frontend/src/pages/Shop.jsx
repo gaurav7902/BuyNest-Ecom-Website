@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import ProductCard from "../components/ProductCard";
-import "../styles/Product.css";
-import { apiUrl } from "../config/api";
+import ProductCard from '../components/ProductCard';
+import '../styles/Product.css';
+import { apiUrl } from '../config/api';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(apiUrl("/products"));
+        const res = await fetch(apiUrl('/products'));
         const data = await res.json();
         setProducts(data);
       } catch (error) {
@@ -38,9 +38,9 @@ const Shop = () => {
 
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <input
-          type="text"
-          className="search-bar"
-          placeholder="Search for products..."
+          type='text'
+          className='search-bar'
+          placeholder='Search for products...'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -49,7 +49,9 @@ const Shop = () => {
       <h2 style={{ textAlign: 'center', marginTop: '40px' }}>All Products</h2>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '40px' }}>Loading products...</div>
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          Loading products...
+        </div>
       ) : (
         <div className='product-grid'>
           {filteredProducts.length > 0 ? (
@@ -57,7 +59,13 @@ const Shop = () => {
               <ProductCard key={product._id} product={product} />
             ))
           ) : (
-            <div style={{ textAlign: 'center', gridColumn: '1 / -1', padding: '40px' }}>
+            <div
+              style={{
+                textAlign: 'center',
+                gridColumn: '1 / -1',
+                padding: '40px',
+              }}
+            >
               No products found matching your search.
             </div>
           )}

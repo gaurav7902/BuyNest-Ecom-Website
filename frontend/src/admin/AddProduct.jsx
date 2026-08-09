@@ -44,7 +44,9 @@ const AddProduct = () => {
       const responseData = await res.json();
 
       if (res.ok) {
-        toast.success('Product created successfully with Cloudinary Image URL!');
+        toast.success(
+          'Product created successfully with Cloudinary Image URL!'
+        );
         navigate('/shop');
       } else {
         toast.error(responseData.message || 'Error creating product');
@@ -59,13 +61,8 @@ const AddProduct = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>
-        Add New Product
-      </h2>
-      <form
-        onSubmit={handleSubmit}
-        className={styles.form}
-      >
+      <h2 className={styles.title}>Add New Product</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <input
           type='text'
           placeholder='Product Name'

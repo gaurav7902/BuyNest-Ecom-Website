@@ -70,10 +70,7 @@ const EditProduct = () => {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Edit Product</h2>
-      <form
-        onSubmit={handleSubmit}
-        className={styles.form}
-      >
+      <form onSubmit={handleSubmit} className={styles.form}>
         <input
           type='text'
           placeholder='Product Name'
@@ -119,9 +116,7 @@ const EditProduct = () => {
           className={styles.input}
         />
         <div className={styles.imageUploadContainer}>
-          <label className={styles.label}>
-            Replace Image (Optional)
-          </label>
+          <label className={styles.label}>Replace Image (Optional)</label>
           <input
             type='file'
             accept='image/*'

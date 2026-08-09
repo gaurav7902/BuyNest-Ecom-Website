@@ -19,11 +19,7 @@ const Navbar = () => {
     <nav className='navbar'>
       <div className='navbar-brand'>
         <Link to='/'>
-          <img
-            src='/brand-logo.png'
-            alt='BuyNest'
-            className={styles.logo}
-          />
+          <img src='/brand-logo.png' alt='BuyNest' className={styles.logo} />
           BuyNest
         </Link>
       </div>

@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./About.module.css";
+import React from 'react';
+import styles from './About.module.css';
 
 const About = () => {
   return (
@@ -9,12 +9,8 @@ const About = () => {
         alt='@Gaurav Patidar'
         className={styles.profileImage}
       />
-      <h2 className={styles.title}>
-        About Me
-      </h2>
-      <h3 className={styles.subtitle}>
-        Gaurav Patidar (@gaurav7902)
-      </h3>
+      <h2 className={styles.title}>About Me</h2>
+      <h3 className={styles.subtitle}>Gaurav Patidar (@gaurav7902)</h3>
 
       <p className={styles.text}>
         I am a passionate web developer . I love building interactive and

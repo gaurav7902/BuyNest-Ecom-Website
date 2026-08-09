@@ -70,12 +70,54 @@ function App() {
             <Route path='/checkout/success' element={<Success />} />
             <Route path='/checkout/failure' element={<Failure />} />
             <Route path='/profile' element={<Profile />} />
-            <Route path='/admin' element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-            <Route path='/admin/add-product' element={<AdminRoute><AddProduct /></AdminRoute>} />
-            <Route path='/admin/products' element={<AdminRoute><AdminProducts /></AdminRoute>} />
-            <Route path='/admin/edit-product/:id' element={<AdminRoute><EditProduct /></AdminRoute>} />
-            <Route path='/admin/orders' element={<AdminRoute><AdminOrders /></AdminRoute>} />
-            <Route path='/admin/users' element={<AdminRoute><AdminUsers /></AdminRoute>} />
+            <Route
+              path='/admin'
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path='/admin/add-product'
+              element={
+                <AdminRoute>
+                  <AddProduct />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path='/admin/products'
+              element={
+                <AdminRoute>
+                  <AdminProducts />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path='/admin/edit-product/:id'
+              element={
+                <AdminRoute>
+                  <EditProduct />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path='/admin/orders'
+              element={
+                <AdminRoute>
+                  <AdminOrders />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path='/admin/users'
+              element={
+                <AdminRoute>
+                  <AdminUsers />
+                </AdminRoute>
+              }
+            />
           </Routes>
         </div>
         <Footer />

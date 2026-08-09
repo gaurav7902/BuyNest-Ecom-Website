@@ -75,12 +75,16 @@ const registerUser = async (req, res) => {
                         message
                     );
                 } catch (mailError) {
-                    console.error("Email sending failed during registration check:", mailError);
+                    console.error(
+                        "Email sending failed during registration check:",
+                        mailError
+                    );
                     // We don't necessarily want to crash the whole request, but the user needs the OTP
                 }
 
                 return res.status(403).json({
-                    message: "Account already exists but is not verified. OTP has been resent.",
+                    message:
+                        "Account already exists but is not verified. OTP has been resent.",
                     verified: false,
                     email: existingUser.email,
                 });
@@ -111,7 +115,10 @@ const registerUser = async (req, res) => {
                     message
                 );
             } catch (mailError) {
-                console.error("Email sending failed during registration:", mailError);
+                console.error(
+                    "Email sending failed during registration:",
+                    mailError
+                );
             }
 
             await newUser.save();

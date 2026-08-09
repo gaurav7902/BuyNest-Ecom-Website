@@ -132,25 +132,25 @@ Run these from the repository root unless noted otherwise.
 
 Protected endpoints require an `Authorization: Bearer <jwt>` header. Endpoints marked **Admin** require an authenticated user with the `admin` role.
 
-| Method   | Endpoint                 | Access        | Description                                                           |
-| -------- | ------------------------ | ------------- | --------------------------------------------------------------------- |
-| `GET`    | `/health`                | Public        | API health response                                                   |
-| `POST`   | `/api/auth/register`     | Public        | Create an account and send an email OTP                               |
-| `POST`   | `/api/auth/verify-email` | Public        | Verify an account with its OTP                                        |
-| `POST`   | `/api/auth/login`        | Public        | Authenticate and receive a JWT                                        |
-| `POST`   | `/api/auth/logout`       | Public        | End the client session                                                |
-| `GET`    | `/api/auth/users`        | Admin         | List users without password hashes                                    |
-| `GET`    | `/api/products`          | Public        | List active products                                                  |
-| `GET`    | `/api/products/:id`      | Public        | Get one product                                                       |
-| `POST`   | `/api/products`          | Admin         | Create a product; accepts multipart `image`                           |
-| `PUT`    | `/api/products/:id`      | Admin         | Update a product; accepts multipart `image`                           |
-| `DELETE` | `/api/products/:id`      | Admin         | Delete a product                                                      |
-| `GET`    | `/api/orders/myorders`   | Authenticated | Get the current user’s orders                                         |
-| `GET`    | `/api/orders`            | Admin         | List all orders                                                       |
-| `PUT`    | `/api/orders/:id/status` | Admin         | Update order status                                                   |
-| `POST`   | `/api/payment/order`     | Authenticated | Create a Razorpay order from cart items                               |
-| `POST`   | `/api/payment/verify`    | Authenticated | Verify the Razorpay signature and create the order                    |
-| `GET`    | `/api/analytics/stats`   | Admin         | Get store totals                                                      |
+| Method   | Endpoint                 | Access        | Description                                        |
+| -------- | ------------------------ | ------------- | -------------------------------------------------- |
+| `GET`    | `/health`                | Public        | API health response                                |
+| `POST`   | `/api/auth/register`     | Public        | Create an account and send an email OTP            |
+| `POST`   | `/api/auth/verify-email` | Public        | Verify an account with its OTP                     |
+| `POST`   | `/api/auth/login`        | Public        | Authenticate and receive a JWT                     |
+| `POST`   | `/api/auth/logout`       | Public        | End the client session                             |
+| `GET`    | `/api/auth/users`        | Admin         | List users without password hashes                 |
+| `GET`    | `/api/products`          | Public        | List active products                               |
+| `GET`    | `/api/products/:id`      | Public        | Get one product                                    |
+| `POST`   | `/api/products`          | Admin         | Create a product; accepts multipart `image`        |
+| `PUT`    | `/api/products/:id`      | Admin         | Update a product; accepts multipart `image`        |
+| `DELETE` | `/api/products/:id`      | Admin         | Delete a product                                   |
+| `GET`    | `/api/orders/myorders`   | Authenticated | Get the current user’s orders                      |
+| `GET`    | `/api/orders`            | Admin         | List all orders                                    |
+| `PUT`    | `/api/orders/:id/status` | Admin         | Update order status                                |
+| `POST`   | `/api/payment/order`     | Authenticated | Create a Razorpay order from cart items            |
+| `POST`   | `/api/payment/verify`    | Authenticated | Verify the Razorpay signature and create the order |
+| `GET`    | `/api/analytics/stats`   | Admin         | Get store totals                                   |
 
 ## Payment testing
 

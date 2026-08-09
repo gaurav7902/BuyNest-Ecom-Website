@@ -52,7 +52,9 @@ const AdminOrders = () => {
             {orders.map((order) => (
               <tr key={order._id} className={styles.row}>
                 <td className={styles.td}>{order._id.substring(0, 8)}...</td>
-                <td className={styles.td}>{order.user?.name || 'Deleted User'}</td>
+                <td className={styles.td}>
+                  {order.user?.name || 'Deleted User'}
+                </td>
                 <td className={styles.td}>₹{order.totalAmount.toFixed(2)}</td>
                 <td className={styles.td}>
                   {new Date(order.createdAt).toLocaleDateString()}

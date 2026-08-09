@@ -46,11 +46,7 @@ const AdminDashboard = () => {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.header}>
-        <img
-          src='/brand-logo.png'
-          alt='Logo'
-          className={styles.logo}
-        />
+        <img src='/brand-logo.png' alt='Logo' className={styles.logo} />
         <h2 className={styles.title}>Admin Dashboard</h2>
       </div>
       <p className={styles.welcomeText}>
@@ -64,9 +60,7 @@ const AdminDashboard = () => {
             <div className={styles.statNumber}>{stats.totalOrders}</div>
           </div>
           <div className={styles.statCard}>
-            <h4 className={styles.statLabel}>
-              Total Products
-            </h4>
+            <h4 className={styles.statLabel}>Total Products</h4>
             <div className={styles.statNumber}>{stats.totalProducts}</div>
           </div>
           <div className={styles.statCard}>
@@ -74,22 +68,18 @@ const AdminDashboard = () => {
             <div className={styles.statNumber}>{stats.totalUsers}</div>
           </div>
           <div className={styles.statCard}>
-            <h4 className={styles.statLabel}>
-              Total Revenue
-            </h4>
-            <div className={styles.statNumber}>₹{stats.totalRevenue.toFixed(2)}</div>
+            <h4 className={styles.statLabel}>Total Revenue</h4>
+            <div className={styles.statNumber}>
+              ₹{stats.totalRevenue.toFixed(2)}
+            </div>
           </div>
         </div>
       ) : (
-        <div className={styles.loadingText}>
-          Loading metrics...
-        </div>
+        <div className={styles.loadingText}>Loading metrics...</div>
       )}
 
       <div className={styles.controlsSection}>
-        <h3 className={styles.controlsTitle}>
-          Administrative Controls
-        </h3>
+        <h3 className={styles.controlsTitle}>Administrative Controls</h3>
         <div className={styles.buttonsWrapper}>
           <button
             className='btn'

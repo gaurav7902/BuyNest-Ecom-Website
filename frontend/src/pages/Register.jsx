@@ -27,11 +27,15 @@ const Register = () => {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success('User registered successfully, check your email for verification.');
+        toast.success(
+          'User registered successfully, check your email for verification.'
+        );
         // Redirect to OTP verification page
         navigate('/verify-otp', { state: { email } });
       } else if (response.status === 403 && data.verified === false) {
-        toast.success(data.message || 'Verification OTP has been resent to your email.');
+        toast.success(
+          data.message || 'Verification OTP has been resent to your email.'
+        );
         navigate('/verify-otp', { state: { email: data.email } });
       } else {
         toast.error(data.message || 'Error registering user');
