@@ -10,6 +10,7 @@
         "start": "cd backend && npm start",
         "dev:server": "cd backend && npm run dev",
         "dev:client": "cd frontend && npm run dev",
+        "lint": "eslint .",
         "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
     },
     "author": "Gaurav",
@@ -19,6 +20,7 @@
         "backend"
     ],
     "devDependencies": {
-        "concurrently": "^10.0.3"
+        "concurrently": "^10.0.3",
+        "eslint": "^10.8.1"
     }
 }
