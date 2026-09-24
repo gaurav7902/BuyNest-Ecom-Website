@@ -26,5 +26,4 @@ dist-ssr
 *.code-workspace
 
 # etc
-Explained.md
-Summary.md
+*Explainer.md
