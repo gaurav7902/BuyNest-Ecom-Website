@@ -1,63 +1,61 @@
-import User from "../models/User.js";
-import sendEmail from "../utils/sendEmail.js";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import User from '../models/User.js';
+import sendEmail from '../utils/sendEmail.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: '7d'});
 };
 
 const verifyEmail = async (req, res) => {
-    const { email: rawEmail, otp } = req.body;
+    const {email: rawEmail, otp} = req.body;
     const email = rawEmail?.toLowerCase();
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({email});
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({message: 'User not found'});
         }
 
         if (user.verified) {
-            return res
-                .status(400)
-                .json({ message: "Email is already verified" });
+            return res.status(400).json({message: 'Email is already verified'});
         }
 
         if (user.otp !== otp) {
-            return res.status(400).json({ message: "Invalid OTP" });
+            return res.status(400).json({message: 'Invalid OTP'});
         }
 
         user.verified = true;
         user.otp = null; // Clear the OTP after successful verification
         await user.save();
 
-        res.status(200).json({ message: "Email verified successfully" });
+        res.status(200).json({message: 'Email verified successfully'});
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Server error",
+            message: 'Server error',
             error: error.message,
         });
     }
 };
 
 const registerUser = async (req, res) => {
-    const { name, email: rawEmail, password } = req.body;
+    const {name, email: rawEmail, password} = req.body;
     const email = rawEmail?.toLowerCase();
 
     if (!name || !email || !password) {
         return res
             .status(400)
-            .json({ message: "Please provide name, email and password" });
+            .json({message: 'Please provide name, email and password'});
     }
 
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({email});
 
         if (existingUser) {
             if (existingUser.verified) {
-                return res.status(409).json({ message: "User already exists" });
+                return res.status(409).json({message: 'User already exists'});
             } else {
                 // User exists but is not verified. Resend OTP and inform the frontend.
                 let otp = existingUser.otp;
@@ -71,20 +69,20 @@ const registerUser = async (req, res) => {
                 try {
                     await sendEmail(
                         existingUser.email,
-                        "Verify your BuyNest account",
-                        message
+                        'Verify your BuyNest account',
+                        message,
                     );
                 } catch (mailError) {
                     console.error(
-                        "Email sending failed during registration check:",
-                        mailError
+                        'Email sending failed during registration check:',
+                        mailError,
                     );
                     // We don't necessarily want to crash the whole request, but the user needs the OTP
                 }
 
                 return res.status(403).json({
                     message:
-                        "Account already exists but is not verified. OTP has been resent.",
+                        'Account already exists but is not verified. OTP has been resent.',
                     verified: false,
                     email: existingUser.email,
                 });
@@ -111,13 +109,13 @@ const registerUser = async (req, res) => {
             try {
                 await sendEmail(
                     email,
-                    "Welcome to BuyNest, your OTP for registration",
-                    message
+                    'Welcome to BuyNest, your OTP for registration',
+                    message,
                 );
             } catch (mailError) {
                 console.error(
-                    "Email sending failed during registration:",
-                    mailError
+                    'Email sending failed during registration:',
+                    mailError,
                 );
             }
 
@@ -131,12 +129,12 @@ const registerUser = async (req, res) => {
                 token: generateToken(newUser._id),
             });
         } else {
-            res.status(400).json({ message: "Invalid user data" });
+            res.status(400).json({message: 'Invalid user data'});
         }
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Server error",
+            message: 'Server error',
             error: error.message,
         });
     }
@@ -144,30 +142,26 @@ const registerUser = async (req, res) => {
 
 // login
 const loginUser = async (req, res) => {
-    const { email: rawEmail, password } = req.body;
+    const {email: rawEmail, password} = req.body;
     const email = rawEmail?.toLowerCase();
 
     if (!email || !password) {
         return res
             .status(400)
-            .json({ message: "Please provide email and password" });
+            .json({message: 'Please provide email and password'});
     }
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({email});
 
         if (!user) {
-            return res
-                .status(401)
-                .json({ message: "Invalid email or password" });
+            return res.status(401).json({message: 'Invalid email or password'});
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-            return res
-                .status(401)
-                .json({ message: "Invalid email or password" });
+            return res.status(401).json({message: 'Invalid email or password'});
         }
 
         if (!user.verified) {
@@ -182,15 +176,15 @@ const loginUser = async (req, res) => {
             try {
                 await sendEmail(
                     user.email,
-                    "Verify your BuyNest account",
-                    message
+                    'Verify your BuyNest account',
+                    message,
                 );
             } catch (mailError) {
-                console.error("Email sending failed during login:", mailError);
+                console.error('Email sending failed during login:', mailError);
             }
 
             return res.status(403).json({
-                message: "Please verify your email first",
+                message: 'Please verify your email first',
                 verified: false,
                 email: user.email,
             });
@@ -206,7 +200,7 @@ const loginUser = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Server error",
+            message: 'Server error',
             error: error.message,
         });
     }
@@ -214,20 +208,20 @@ const loginUser = async (req, res) => {
 
 // logout
 const logoutUser = (req, res) => {
-    res.status(200).json({ message: "User logged out successfully" });
+    res.status(200).json({message: 'User logged out successfully'});
 };
 
 const getUsers = async (req, res) => {
     try {
-        const users = await User.find({}).select("-password");
+        const users = await User.find({}).select('-password');
         res.json(users);
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Server error",
+            message: 'Server error',
             error: error.message,
         });
     }
 };
 
-export { registerUser, verifyEmail, loginUser, logoutUser, getUsers };
+export {registerUser, verifyEmail, loginUser, logoutUser, getUsers};

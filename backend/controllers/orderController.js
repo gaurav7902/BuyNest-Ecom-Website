@@ -1,17 +1,17 @@
-import Order from "../models/Order.js";
-import sendEmail from "../utils/sendEmail.js";
-import Product from "../models/Product.js";
-import mongoose from "mongoose";
+import Order from '../models/Order.js';
+import sendEmail from '../utils/sendEmail.js';
+import Product from '../models/Product.js';
+import mongoose from 'mongoose';
 
 const createOrder = async (req, res) => {
     const session = await mongoose.startSession();
     try {
-        const { items, address, paymentId } = req.body;
+        const {items, address, paymentId} = req.body;
 
         if (!items || items.length === 0 || !address || !paymentId) {
             return res.status(400).json({
                 message:
-                    "Missing required fields: items, address, or paymentId",
+                    'Missing required fields: items, address, or paymentId',
             });
         }
 
@@ -22,7 +22,7 @@ const createOrder = async (req, res) => {
         await session.withTransaction(async () => {
             for (const item of items) {
                 const product = await Product.findById(item._id).session(
-                    session
+                    session,
                 );
 
                 if (!product) {
@@ -60,8 +60,8 @@ const createOrder = async (req, res) => {
                 // Deduct stock
                 await Product.findByIdAndUpdate(
                     product._id,
-                    { $inc: { stock: -item.quantity } },
-                    { session }
+                    {$inc: {stock: -item.quantity}},
+                    {session},
                 );
             }
 
@@ -73,14 +73,14 @@ const createOrder = async (req, res) => {
                 paymentId,
             });
 
-            await newOrder.save({ session });
+            await newOrder.save({session});
 
             session.result = newOrder;
         });
 
         const order = session.result;
 
-        const emailSubject = "Order Confirmation";
+        const emailSubject = 'Order Confirmation';
         const emailBody = `<h1>Thank you for your order!</h1>
         <p>Your order has been successfully placed.</p>
         <p><strong>Order ID:</strong> ${order._id}</p>
@@ -100,11 +100,11 @@ const createOrder = async (req, res) => {
         res.status(201).json(order);
     } catch (error) {
         if (error.status) {
-            return res.status(error.status).json({ message: error.message });
+            return res.status(error.status).json({message: error.message});
         }
-        console.error("Order Creation Error:", error);
+        console.error('Order Creation Error:', error);
         res.status(500).json({
-            message: "Internal Server Error",
+            message: 'Internal Server Error',
             error: error.message,
         });
     } finally {
@@ -114,15 +114,15 @@ const createOrder = async (req, res) => {
 
 const getOrderByUserId = async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user._id }).populate(
-            "items.product",
-            "name price"
+        const orders = await Order.find({user: req.user._id}).populate(
+            'items.product',
+            'name price',
         );
         res.json(orders);
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Internal Server Error",
+            message: 'Internal Server Error',
             error: error.message,
         });
     }
@@ -131,13 +131,13 @@ const getOrderByUserId = async (req, res) => {
 const getAllOrders = async (req, res) => {
     try {
         const orders = await Order.find()
-            .populate("user", "name email")
-            .populate("items.product", "name image price");
+            .populate('user', 'name email')
+            .populate('items.product', 'name image price');
         res.json(orders);
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Internal Server Error",
+            message: 'Internal Server Error',
             error: error.message,
         });
     }
@@ -145,17 +145,17 @@ const getAllOrders = async (req, res) => {
 
 const updateOrderStatus = async (req, res) => {
     try {
-        const { status } = req.body;
+        const {status} = req.body;
         const order = await Order.findById(req.params.id);
 
         if (!order) {
-            return res.status(404).json({ message: "Order not found" });
+            return res.status(404).json({message: 'Order not found'});
         }
-        const allowedStatus = ["pending", "shipped", "cancelled", "delivered"];
+        const allowedStatus = ['pending', 'shipped', 'cancelled', 'delivered'];
 
         if (!allowedStatus.includes(status)) {
             return res.status(400).json({
-                message: "Invalid status",
+                message: 'Invalid status',
             });
         }
 
@@ -167,10 +167,10 @@ const updateOrderStatus = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Internal Server Error",
+            message: 'Internal Server Error',
             error: error.message,
         });
     }
 };
 
-export { createOrder, getOrderByUserId, getAllOrders, updateOrderStatus };
+export {createOrder, getOrderByUserId, getAllOrders, updateOrderStatus};
