@@ -45,14 +45,14 @@ app.use(express.json({limit: '1mb'}));
 app.use(express.urlencoded({extended: true}));
 
 const apiLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 300,
-    standardHeaders: 'draft-8',
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 300, // max 300 requests per 15 minutes
+    standardHeaders: 'draft-8', //
     legacyHeaders: false,
 });
 const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 20,
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 20, // max 20 requests per 15 minutes
     standardHeaders: 'draft-8',
     legacyHeaders: false,
 });
