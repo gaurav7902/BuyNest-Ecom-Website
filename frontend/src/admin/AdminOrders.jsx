@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import styles from './AdminOrders.module.css';
-import { apiUrl } from '../config/api';
+import React, { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import styles from "./AdminOrders.module.css";
+import { apiUrl } from "../config/api";
 
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
@@ -9,7 +9,7 @@ const AdminOrders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const res = await fetch(apiUrl('/orders'), {
+      const res = await fetch(apiUrl("/orders"), {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       const data = await res.json();
@@ -20,16 +20,18 @@ const AdminOrders = () => {
 
   const updateStatus = async (id, status) => {
     const res = await fetch(apiUrl(`/orders/${id}/status`), {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`,
       },
       body: JSON.stringify({ status }),
     });
     if (res.ok) {
       setOrders(
-        orders.map((order) => (order._id === id ? { ...order, status } : order))
+        orders.map((order) =>
+          order._id === id ? { ...order, status } : order,
+        ),
       );
     }
   };
@@ -53,7 +55,7 @@ const AdminOrders = () => {
               <tr key={order._id} className={styles.row}>
                 <td className={styles.td}>{order._id.substring(0, 8)}...</td>
                 <td className={styles.td}>
-                  {order.user?.name || 'Deleted User'}
+                  {order.user?.name || "Deleted User"}
                 </td>
                 <td className={styles.td}>₹{order.totalAmount.toFixed(2)}</td>
                 <td className={styles.td}>
@@ -65,9 +67,9 @@ const AdminOrders = () => {
                     onChange={(e) => updateStatus(order._id, e.target.value)}
                     className={styles.statusSelect}
                   >
-                    <option value='pending'>Pending</option>
-                    <option value='shipped'>Shipped</option>
-                    <option value='delivered'>Delivered</option>
+                    <option value="pending">Pending</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
                   </select>
                 </td>
               </tr>

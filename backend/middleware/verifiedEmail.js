@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import User from "../models/User.js";
 
 const verifiedEmail = async (req, res, next) => {
     const {email} = req.body;
@@ -7,20 +7,20 @@ const verifiedEmail = async (req, res, next) => {
         const user = await User.findOne({email});
 
         if (!user) {
-            return res.status(404).json({message: 'User not found'});
+            return res.status(404).json({message: "User not found"});
         }
 
         if (!user.verified) {
             return res
                 .status(400)
-                .json({message: 'Please verify your email first'});
+                .json({message: "Please verify your email first"});
         }
 
         next();
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: 'Server error',
+            message: "Server error",
             error: error.message,
         });
     }

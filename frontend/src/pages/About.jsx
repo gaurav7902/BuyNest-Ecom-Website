@@ -1,12 +1,12 @@
-import React from 'react';
-import styles from './About.module.css';
+import React from "react";
+import styles from "./About.module.css";
 
 const About = () => {
   return (
     <div className={styles.container}>
       <img
-        src='/dp.jpg'
-        alt='@Gaurav Patidar'
+        src="/dp.jpg"
+        alt="@Gaurav Patidar"
         className={styles.profileImage}
       />
       <h2 className={styles.title}>About Me</h2>
@@ -26,49 +26,49 @@ const About = () => {
 
       <div className={styles.socialLinks}>
         <a
-          href='https://github.com/gaurav7902'
-          target='_blank'
-          rel='noreferrer'
+          href="https://github.com/gaurav7902"
+          target="_blank"
+          rel="noreferrer"
           className={styles.socialBtn}
         >
           🌐 Website
         </a>
         <a
-          href='https://youtube.com/@go7av'
-          target='_blank'
-          rel='noreferrer'
+          href="https://youtube.com/@go7av"
+          target="_blank"
+          rel="noreferrer"
           className={`${styles.socialBtn} ${styles.btnYoutube}`}
         >
           📺 YouTube
         </a>
         <a
-          href='https://instagram.com/go7av'
-          target='_blank'
-          rel='noreferrer'
+          href="https://instagram.com/go7av"
+          target="_blank"
+          rel="noreferrer"
           className={`${styles.socialBtn} ${styles.btnInstagram}`}
         >
           📸 Instagram
         </a>
         <a
-          href='https://www.linkedin.com/in/gauravpatidar'
-          target='_blank'
-          rel='noreferrer'
+          href="https://www.linkedin.com/in/gauravpatidar"
+          target="_blank"
+          rel="noreferrer"
           className={`${styles.socialBtn} ${styles.btnLinkedin}`}
         >
           💼 LinkedIn
         </a>
         <a
-          href='https://x.com/ggoravv'
-          target='_blank'
-          rel='noreferrer'
+          href="https://x.com/ggoravv"
+          target="_blank"
+          rel="noreferrer"
           className={styles.socialBtn}
         >
           ✖️ X (Twitter)
         </a>
         <a
-          href='https://linktr.ee/go7av'
-          target='_blank'
-          rel='noreferrer'
+          href="https://linktr.ee/go7av"
+          target="_blank"
+          rel="noreferrer"
           className={styles.socialBtn}
         >
           🔗 Linktree

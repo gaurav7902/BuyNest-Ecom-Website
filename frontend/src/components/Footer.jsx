@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styles from './Footer.module.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import styles from "./Footer.module.css";
 
 const Footer = () => {
   return (
@@ -12,13 +12,13 @@ const Footer = () => {
         </div>
 
         <div className={styles.linkGroup}>
-          <Link to='/about' className={styles.footerLink}>
+          <Link to="/about" className={styles.footerLink}>
             About Us
           </Link>
-          <Link to='/return' className={styles.footerLink}>
+          <Link to="/return" className={styles.footerLink}>
             Return Policy
           </Link>
-          <Link to='/disclaimer' className={styles.footerLink}>
+          <Link to="/disclaimer" className={styles.footerLink}>
             Disclaimer
           </Link>
         </div>

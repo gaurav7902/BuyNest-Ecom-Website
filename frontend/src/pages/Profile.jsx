@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import toast from 'react-hot-toast';
-import { useNavigate, Link } from 'react-router-dom';
-import styles from './Profile.module.css';
-import { apiUrl } from '../config/api';
+import React, { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import { useNavigate, Link } from "react-router-dom";
+import styles from "./Profile.module.css";
+import { apiUrl } from "../config/api";
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
@@ -13,12 +13,12 @@ const Profile = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
     const fetchMyOrders = async () => {
       try {
-        const res = await fetch(apiUrl('/orders/myorders'), {
+        const res = await fetch(apiUrl("/orders/myorders"), {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         const data = await res.json();
@@ -28,13 +28,13 @@ const Profile = () => {
           // Token obsolete or 401: clear and bounce
           if (res.status === 401) {
             logout();
-            navigate('/login');
+            navigate("/login");
           }
           setOrders([]);
         }
       } catch (error) {
         console.error(error);
-        toast.error('Failed to load your order history.');
+        toast.error("Failed to load your order history.");
       } finally {
         setLoading(false);
       }
@@ -44,7 +44,7 @@ const Profile = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   if (!user) return null;
@@ -77,7 +77,7 @@ const Profile = () => {
           <p className={styles.noOrdersText}>
             You haven't placed any orders yet.
           </p>
-          <Link to='/shop' className='btn'>
+          <Link to="/shop" className="btn">
             Start Shopping
           </Link>
         </div>
@@ -87,17 +87,17 @@ const Profile = () => {
             <div key={order._id} className={styles.orderItem}>
               <div>
                 <p className={styles.orderInfoText}>
-                  Order ID:{' '}
+                  Order ID:{" "}
                   <span className={styles.orderWhite}>{order._id}</span>
                 </p>
                 <p className={styles.orderInfoText}>
-                  Placed On:{' '}
+                  Placed On:{" "}
                   <span className={styles.orderWhite}>
                     {new Date(order.createdAt).toLocaleDateString()}
                   </span>
                 </p>
                 <p className={styles.orderTotalText}>
-                  Total:{' '}
+                  Total:{" "}
                   <strong className={styles.orderTotalAmount}>
                     ₹{order.totalAmount.toFixed(2)}
                   </strong>
@@ -106,9 +106,9 @@ const Profile = () => {
               <div>
                 <span
                   className={`${styles.statusBadge} ${
-                    order.status === 'Delivered'
+                    order.status === "Delivered"
                       ? styles.statusDelivered
-                      : order.status === 'Shipped'
+                      : order.status === "Shipped"
                         ? styles.statusShipped
                         : styles.statusPending
                   }`}

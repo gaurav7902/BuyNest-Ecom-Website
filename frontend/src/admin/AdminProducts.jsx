@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
-import styles from './AdminProducts.module.css';
-import { apiUrl } from '../config/api';
+import React, { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import styles from "./AdminProducts.module.css";
+import { apiUrl } from "../config/api";
 
 const AdminProducts = () => {
   const { user } = useContext(AuthContext);
@@ -10,7 +10,7 @@ const AdminProducts = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const res = await fetch(apiUrl('/products'));
+      const res = await fetch(apiUrl("/products"));
       const data = await res.json();
       setProducts(Array.isArray(data) ? data : []);
     };
@@ -18,9 +18,9 @@ const AdminProducts = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you strictly sure you want to delete this?')) {
+    if (window.confirm("Are you strictly sure you want to delete this?")) {
       const res = await fetch(apiUrl(`/products/${id}`), {
-        method: 'DELETE',
+        method: "DELETE",
         headers: { Authorization: `Bearer ${user.token}` },
       });
       if (res.ok) {
@@ -33,7 +33,7 @@ const AdminProducts = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2 className={styles.title}>Manage Products</h2>
-        <Link to='/admin/add-product' className='btn'>
+        <Link to="/admin/add-product" className="btn">
           + Add Product
         </Link>
       </div>

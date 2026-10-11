@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import styles from './VerifyOTP.module.css';
-import { apiUrl } from '../config/api';
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
+import styles from "./VerifyOTP.module.css";
+import { apiUrl } from "../config/api";
 
 const VerifyOTP = () => {
-  const [otp, setOtp] = useState(new Array(6).fill(''));
+  const [otp, setOtp] = useState(new Array(6).fill(""));
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -14,8 +14,8 @@ const VerifyOTP = () => {
 
   useEffect(() => {
     if (!email) {
-      toast.error('No email provided. Please register first.');
-      navigate('/register');
+      toast.error("No email provided. Please register first.");
+      navigate("/register");
     }
   }, [email, navigate]);
 
@@ -33,25 +33,25 @@ const VerifyOTP = () => {
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1].focus();
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const otpString = otp.join('');
+    const otpString = otp.join("");
     if (otpString.length !== 6) {
-      toast.error('Please enter all 6 digits of the OTP.');
+      toast.error("Please enter all 6 digits of the OTP.");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch(apiUrl('/auth/verify-email'), {
-        method: 'POST',
+      const response = await fetch(apiUrl("/auth/verify-email"), {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email: email.toLowerCase(), otp: otpString }),
       });
@@ -59,14 +59,14 @@ const VerifyOTP = () => {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success('Email verified successfully! Please log in.');
-        navigate('/login');
+        toast.success("Email verified successfully! Please log in.");
+        navigate("/login");
       } else {
-        toast.error(data.message || 'Invalid OTP. Please try again.');
+        toast.error(data.message || "Invalid OTP. Please try again.");
       }
     } catch (error) {
-      console.error('Error verifying OTP:', error);
-      toast.error('An error occurred during verification. Please try again.');
+      console.error("Error verifying OTP:", error);
+      toast.error("An error occurred during verification. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -88,7 +88,7 @@ const VerifyOTP = () => {
               {otp.map((digit, index) => (
                 <input
                   key={index}
-                  type='text'
+                  type="text"
                   className={styles.otpInput}
                   value={digit}
                   onChange={(e) => handleChange(e, index)}
@@ -100,14 +100,14 @@ const VerifyOTP = () => {
               ))}
             </div>
           </div>
-          <button type='submit' className='btn' disabled={loading}>
-            {loading ? 'Verifying...' : 'Verify OTP'}
+          <button type="submit" className="btn" disabled={loading}>
+            {loading ? "Verifying..." : "Verify OTP"}
           </button>
         </form>
         <div className={styles.authFooter}>
           <p>
-            Didn't receive the code?{' '}
-            <a href='/register' className={styles.authLink}>
+            Didn't receive the code?{" "}
+            <a href="/register" className={styles.authLink}>
               Register again
             </a>
           </p>

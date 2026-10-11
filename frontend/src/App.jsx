@@ -1,43 +1,43 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import About from './pages/About';
-import Disclaimer from './pages/Disclaimer';
-import ReturnPolicy from './pages/ReturnPolicy';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import VerifyOTP from './pages/VerifyOTP';
-import ProductDetail from './pages/ProductDetails';
-import Shop from './pages/Shop';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import Success from './pages/Success';
-import Failure from './pages/Failure';
-import Profile from './pages/Profile';
-import AdminDashboard from './admin/AdminDashboard';
-import AddProduct from './admin/AddProduct';
-import AdminProducts from './admin/AdminProducts';
-import EditProduct from './admin/EditProduct';
-import AdminOrders from './admin/AdminOrders';
-import AdminUsers from './admin/AdminUsers';
-import GuestRoute from './components/GuestRoute';
-import AdminRoute from './components/AdminRoute';
-import styles from './App.module.css';
+import { BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Disclaimer from "./pages/Disclaimer";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import VerifyOTP from "./pages/VerifyOTP";
+import ProductDetail from "./pages/ProductDetails";
+import Shop from "./pages/Shop";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Success from "./pages/Success";
+import Failure from "./pages/Failure";
+import Profile from "./pages/Profile";
+import AdminDashboard from "./admin/AdminDashboard";
+import AddProduct from "./admin/AddProduct";
+import AdminProducts from "./admin/AdminProducts";
+import EditProduct from "./admin/EditProduct";
+import AdminOrders from "./admin/AdminOrders";
+import AdminUsers from "./admin/AdminUsers";
+import GuestRoute from "./components/GuestRoute";
+import AdminRoute from "./components/AdminRoute";
+import styles from "./App.module.css";
 
 function App() {
   return (
     <Router>
       <div className={styles.appContainer}>
-        <Toaster position='top-center' reverseOrder={false} />
+        <Toaster position="top-center" reverseOrder={false} />
         <Navbar />
         <div className={styles.mainContent}>
           <Routes>
-            <Route path='/' element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route
-              path='/register'
+              path="/register"
               element={
                 <GuestRoute>
                   <Register />
@@ -45,7 +45,7 @@ function App() {
               }
             />
             <Route
-              path='/verify-otp'
+              path="/verify-otp"
               element={
                 <GuestRoute>
                   <VerifyOTP />
@@ -53,25 +53,25 @@ function App() {
               }
             />
             <Route
-              path='/login'
+              path="/login"
               element={
                 <GuestRoute>
                   <Login />
                 </GuestRoute>
               }
             />
-            <Route path='/about' element={<About />} />
-            <Route path='/shop' element={<Shop />} />
-            <Route path='/return' element={<ReturnPolicy />} />
-            <Route path='/disclaimer' element={<Disclaimer />} />
-            <Route path='/product/:id' element={<ProductDetail />} />
-            <Route path='/cart' element={<Cart />} />
-            <Route path='/checkout' element={<Checkout />} />
-            <Route path='/checkout/success' element={<Success />} />
-            <Route path='/checkout/failure' element={<Failure />} />
-            <Route path='/profile' element={<Profile />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/return" element={<ReturnPolicy />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/checkout/success" element={<Success />} />
+            <Route path="/checkout/failure" element={<Failure />} />
+            <Route path="/profile" element={<Profile />} />
             <Route
-              path='/admin'
+              path="/admin"
               element={
                 <AdminRoute>
                   <AdminDashboard />
@@ -79,7 +79,7 @@ function App() {
               }
             />
             <Route
-              path='/admin/add-product'
+              path="/admin/add-product"
               element={
                 <AdminRoute>
                   <AddProduct />
@@ -87,7 +87,7 @@ function App() {
               }
             />
             <Route
-              path='/admin/products'
+              path="/admin/products"
               element={
                 <AdminRoute>
                   <AdminProducts />
@@ -95,7 +95,7 @@ function App() {
               }
             />
             <Route
-              path='/admin/edit-product/:id'
+              path="/admin/edit-product/:id"
               element={
                 <AdminRoute>
                   <EditProduct />
@@ -103,7 +103,7 @@ function App() {
               }
             />
             <Route
-              path='/admin/orders'
+              path="/admin/orders"
               element={
                 <AdminRoute>
                   <AdminOrders />
@@ -111,7 +111,7 @@ function App() {
               }
             />
             <Route
-              path='/admin/users'
+              path="/admin/users"
               element={
                 <AdminRoute>
                   <AdminUsers />

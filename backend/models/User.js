@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
     {
@@ -19,8 +19,8 @@ const userSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ['user', 'admin'],
-            default: 'user',
+            enum: ["user", "admin"],
+            default: "user",
         },
         verified: {
             type: Boolean,
@@ -35,4 +35,4 @@ const userSchema = new mongoose.Schema(
     },
 );
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);

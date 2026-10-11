@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import styles from './AdminDashboard.module.css';
-import { apiUrl } from '../config/api';
+import React, { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import styles from "./AdminDashboard.module.css";
+import { apiUrl } from "../config/api";
 
 const AdminDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -11,14 +11,14 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
-      navigate('/');
+    if (!user || user.role !== "admin") {
+      navigate("/");
       return;
     }
 
     const fetchStats = async () => {
       try {
-        const res = await fetch(apiUrl('/analytics/stats'), {
+        const res = await fetch(apiUrl("/analytics/stats"), {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         const data = await res.json();
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
           setStats(data);
         } else {
           if (res.status === 401) {
-            navigate('/login');
+            navigate("/login");
           }
           setStats({
             totalOrders: 0,
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
         }
       } catch (error) {
         console.error(error);
-        toast.error('Failed to load admin statistics.');
+        toast.error("Failed to load admin statistics.");
       }
     };
     fetchStats();
@@ -46,7 +46,7 @@ const AdminDashboard = () => {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.header}>
-        <img src='/brand-logo.png' alt='Logo' className={styles.logo} />
+        <img src="/brand-logo.png" alt="Logo" className={styles.logo} />
         <h2 className={styles.title}>Admin Dashboard</h2>
       </div>
       <p className={styles.welcomeText}>
@@ -82,26 +82,26 @@ const AdminDashboard = () => {
         <h3 className={styles.controlsTitle}>Administrative Controls</h3>
         <div className={styles.buttonsWrapper}>
           <button
-            className='btn'
-            onClick={() => navigate('/admin/add-product')}
+            className="btn"
+            onClick={() => navigate("/admin/add-product")}
           >
             + Add Product
           </button>
           <button
             className={`btn ${styles.grayBtn}`}
-            onClick={() => navigate('/admin/products')}
+            onClick={() => navigate("/admin/products")}
           >
             📦 Manage Products
           </button>
           <button
             className={`btn ${styles.grayBtn}`}
-            onClick={() => navigate('/admin/orders')}
+            onClick={() => navigate("/admin/orders")}
           >
             🚚 Manage Orders
           </button>
           <button
             className={`btn ${styles.grayBtn}`}
-            onClick={() => navigate('/admin/users')}
+            onClick={() => navigate("/admin/users")}
           >
             👥 Users Directory
           </button>

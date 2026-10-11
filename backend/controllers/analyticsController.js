@@ -1,6 +1,6 @@
-import Order from '../models/Order.js';
-import Product from '../models/Product.js';
-import User from '../models/User.js';
+import Order from "../models/Order.js";
+import Product from "../models/Product.js";
+import User from "../models/User.js";
 
 const getAdminStats = async (req, res) => {
     try {
@@ -23,10 +23,10 @@ const getAdminStats = async (req, res) => {
             totalUsers,
         });
     } catch (error) {
-        console.error('Error fetching admin stats:', error);
+        console.error("Error fetching admin stats:", error);
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch admin stats',
+            message: "Failed to fetch admin stats",
             error: error.message,
         });
     }
