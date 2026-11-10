@@ -6,7 +6,9 @@ BuyNest is a full-stack e-commerce application with a React storefront, an Expre
 
 - Browse products, view product details, and manage a client-side shopping cart.
 - Register, verify an email address by OTP, log in, and view personal order history.
-- Create Razorpay orders and verify payment signatures on the server before saving an order or deducting stock.
+- Secure Razorpay checkout: the server prices the cart, stores what was priced, and verifies the signature **and** the paid amount before saving an order or deducting stock.
+- Atomic stock updates inside MongoDB transactions, so concurrent checkouts cannot oversell a product.
+- Idempotent payment verification (retries and double-clicks never create duplicate orders) and automatic refunds when a paid order cannot be fulfilled.
 - Admin-only dashboard, product management, user directory, order list, and order-status updates.
 - Upload product images to Cloudinary.
 - Seed the database with sample users, products, and orders for development.
@@ -37,7 +39,7 @@ BuyNest is a full-stack e-commerce application with a React storefront, an Expre
 │   ├── config/            # MongoDB and Cloudinary configuration
 │   ├── controllers/       # Route handlers
 │   ├── middleware/        # JWT, email, and admin guards
-│   ├── models/            # User, Product, and Order schemas
+│   ├── models/            # User, Product, Order, and PendingOrder schemas
 │   ├── routes/            # API routes
 │   └── seed.js            # Development seed data
 ├── api/index.js           # Vercel serverless entry point
@@ -132,29 +134,70 @@ Run these from the repository root unless noted otherwise.
 
 Protected endpoints require an `Authorization: Bearer <jwt>` header. Endpoints marked **Admin** require an authenticated user with the `admin` role.
 
-| Method   | Endpoint                 | Access        | Description                                        |
-| -------- | ------------------------ | ------------- | -------------------------------------------------- |
-| `GET`    | `/health`                | Public        | API health response                                |
-| `POST`   | `/api/auth/register`     | Public        | Create an account and send an email OTP            |
-| `POST`   | `/api/auth/verify-email` | Public        | Verify an account with its OTP                     |
-| `POST`   | `/api/auth/login`        | Public        | Authenticate and receive a JWT                     |
-| `POST`   | `/api/auth/logout`       | Public        | End the client session                             |
-| `GET`    | `/api/auth/users`        | Admin         | List users without password hashes                 |
-| `GET`    | `/api/products`          | Public        | List active products                               |
-| `GET`    | `/api/products/:id`      | Public        | Get one product                                    |
-| `POST`   | `/api/products`          | Admin         | Create a product; accepts multipart `image`        |
-| `PUT`    | `/api/products/:id`      | Admin         | Update a product; accepts multipart `image`        |
-| `DELETE` | `/api/products/:id`      | Admin         | Delete a product                                   |
-| `GET`    | `/api/orders/myorders`   | Authenticated | Get the current user’s orders                      |
-| `GET`    | `/api/orders`            | Admin         | List all orders                                    |
-| `PUT`    | `/api/orders/:id/status` | Admin         | Update order status                                |
-| `POST`   | `/api/payment/order`     | Authenticated | Create a Razorpay order from cart items            |
-| `POST`   | `/api/payment/verify`    | Authenticated | Verify the Razorpay signature and create the order |
-| `GET`    | `/api/analytics/stats`   | Admin         | Get store totals                                   |
+| Method   | Endpoint                 | Access        | Description                                                                                                 |
+| -------- | ------------------------ | ------------- | ----------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/health`                | Public        | API health response                                                                                         |
+| `POST`   | `/api/auth/register`     | Public        | Create an account and send an email OTP                                                                     |
+| `POST`   | `/api/auth/verify-email` | Public        | Verify an account with its OTP                                                                              |
+| `POST`   | `/api/auth/login`        | Public        | Authenticate and receive a JWT                                                                              |
+| `POST`   | `/api/auth/logout`       | Public        | End the client session                                                                                      |
+| `GET`    | `/api/auth/users`        | Admin         | List users without password hashes                                                                          |
+| `GET`    | `/api/products`          | Public        | List active products                                                                                        |
+| `GET`    | `/api/products/:id`      | Public        | Get one product                                                                                             |
+| `POST`   | `/api/products`          | Admin         | Create a product; accepts multipart `image`                                                                 |
+| `PUT`    | `/api/products/:id`      | Admin         | Update a product; accepts multipart `image`                                                                 |
+| `DELETE` | `/api/products/:id`      | Admin         | Delete a product                                                                                            |
+| `GET`    | `/api/orders/myorders`   | Authenticated | Get the current user’s orders                                                                               |
+| `GET`    | `/api/orders`            | Admin         | List all orders                                                                                             |
+| `PUT`    | `/api/orders/:id/status` | Admin         | Update order status                                                                                         |
+| `POST`   | `/api/payment/order`     | Authenticated | Price the cart and address on the server, create a Razorpay order, and save a `PendingOrder`                |
+| `POST`   | `/api/payment/verify`    | Authenticated | Verify the signature and paid amount against the `PendingOrder`, then create the order (refunds on failure) |
+| `GET`    | `/api/analytics/stats`   | Admin         | Get store totals                                                                                            |
+
+## Payment flow and security
+
+Checkout is designed so the browser is never trusted for prices, cart contents, or amounts.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Express API
+    participant R as Razorpay
+    participant DB as MongoDB
+
+    C->>S: POST /payment/order (items, address)
+    S->>DB: Read prices and stock
+    S->>R: Create order (server-computed amount)
+    S->>DB: Save PendingOrder (items, address, amount)
+    S-->>C: Razorpay order id
+    C->>R: Pay in Razorpay Checkout
+    R-->>C: order_id, payment_id, signature
+    C->>S: POST /payment/verify (ids and signature only)
+    S->>S: Verify HMAC signature
+    S->>DB: Load PendingOrder (owner check)
+    S->>R: Fetch order (status and amount_paid)
+    S->>DB: Transaction: re-check prices, decrement stock, create Order
+    alt Stock or price changed after payment
+        S->>R: Refund payment
+    end
+    S-->>C: Order confirmation
+```
+
+How it protects the payment:
+
+- **Server-side pricing.** Prices always come from the database. Totals are computed in integer paise to avoid floating-point mismatches.
+- **No client-supplied cart at verification.** `/payment/verify` accepts only the three Razorpay identifiers. The cart, address, and amount come from the `PendingOrder` saved when the order was created, so a user cannot pay for a cheap cart and submit an expensive one.
+- **Amount reconciliation.** Razorpay is asked for the real order state; the order must be `paid` and `amount_paid` must equal the amount the server priced.
+- **Signature check.** The HMAC signature is compared with `crypto.timingSafeEqual`.
+- **Ownership check.** A payment can only be verified by the user who created it.
+- **Idempotency.** Repeated or simultaneous verify calls return the same order; a unique index on the payment id prevents duplicates.
+- **Overselling protection.** Stock is decremented with a conditional atomic update inside a transaction (`stock >= quantity`).
+- **Automatic refunds.** If stock, availability, or price changed between checkout and payment, the transaction is rolled back and the payment is refunded through Razorpay. If the refund itself fails, the error is logged for manual follow-up.
+- **Cleanup.** `PendingOrder` records for abandoned checkouts expire after 7 days (TTL index).
 
 ## Payment testing
 
-Use Razorpay **test-mode** keys while developing. BuyNest has no application-level payment bypass: every completed checkout uses a Razorpay test order and the server verifies its payment signature before it creates an order or updates stock.
+Use Razorpay **test-mode** keys while developing. BuyNest has no application-level payment bypass: every completed checkout uses a Razorpay test order, and the server verifies the payment signature and the paid amount against the saved `PendingOrder` before it creates an order or updates stock.
 
 For a successful Razorpay test payment, use any card below with any future expiry date and any random CVV.
 
@@ -185,6 +228,7 @@ For a separate frontend and backend deployment, set `VITE_API_URL` to the public
 ## Security notes
 
 - Keep MongoDB, JWT, email, Cloudinary secret, and Razorpay secret values private.
+- Never trust prices, totals, or cart contents sent by the client; the server recomputes them from the database (see [Payment flow and security](#payment-flow-and-security)).
 - Use Razorpay live keys only after the payment flow has been reviewed and the production domain is configured in Razorpay.
 - Restrict `FRONTEND_URL` to the exact allowed browser origin to enforce CORS.
 - Use a dedicated Gmail app password rather than an account password.
