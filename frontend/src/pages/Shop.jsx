@@ -36,7 +36,13 @@ const Shop = () => {
         <p>Discover a wide range of premium products curated just for you.</p>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
         <input
           type="text"
           className="search-bar"

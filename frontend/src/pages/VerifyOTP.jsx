@@ -53,7 +53,10 @@ const VerifyOTP = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email.toLowerCase(), otp: otpString }),
+        body: JSON.stringify({
+          email: email.toLowerCase(),
+          otp: otpString,
+        }),
       });
 
       const data = await response.json();
