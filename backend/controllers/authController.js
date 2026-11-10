@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import sendEmail from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import {randomInt} from "crypto";
 
 const generateToken = (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "7d"});
@@ -58,9 +59,9 @@ const registerUser = async (req, res) => {
                 return res.status(409).json({message: "User already exists"});
             } else {
                 // User exists but is not verified. Resend OTP and inform the frontend.
-                let otp = existingUser.otp;
+                const otp = existingUser.otp;
                 if (!otp) {
-                    otp = Math.floor(100000 + Math.random() * 900000);
+                    const otp = crypto.randomInt(100000, 1000000);
                     existingUser.otp = otp;
                     await existingUser.save();
                 }
@@ -99,7 +100,7 @@ const registerUser = async (req, res) => {
         });
 
         if (newUser) {
-            const otp = Math.floor(100000 + Math.random() * 900000);
+            const otp = crypto.randomInt(100000, 1000000);
             newUser.otp = otp;
 
             const message = `
@@ -167,7 +168,7 @@ const loginUser = async (req, res) => {
         if (!user.verified) {
             let otp = user.otp;
             if (!otp) {
-                otp = Math.floor(100000 + Math.random() * 900000);
+                const otp = crypto.randomInt(100000, 1000000);
                 user.otp = otp;
                 await user.save();
             }
